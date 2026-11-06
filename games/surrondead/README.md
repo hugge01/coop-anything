@@ -52,6 +52,6 @@ Invisible zombies on clients (`spawn_zombie_actor` returns null — expected unt
 
 ## Next steps
 
-1. Zombie proxy visibility — plan in store `internal/zombie-visibility-fix-plan.md` (SDO README/source; flag-gated re-enable; ask before Windows build).
-2. Broader “same world” gaps still open per SDO docs: vehicles, building hook, combat re-verify, server inventory restore.
-3. Friend-facing howto only after a stable visibility pass (or owner pause).
+1. Apply `games/surrondead/sdo-patches/0001-zombie-proxy-smallest-levers.patch` on the test-copy SDO tree, rebuild/deploy, retest with `enable_zombie_proxies.flag` (brief: store `internal/phase3-zombie-proxy-build-brief.md`).
+2. If Roamer proxies stable: Dog/Boss, then combat; else keep flag off and capture crash evidence.
+3. Broader gaps per SDO docs: vehicles, building hook, server inventory restore; friend howto after a stable pass.

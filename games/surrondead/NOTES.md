@@ -376,13 +376,21 @@ Ranked hypotheses A–E in the plan (FindObject type, dangling actor, AI lifetim
 
 Vehicles never live-tested; building hook stale on 5.6; combat/death unverified on 5.6; server inventory restore incomplete; ticket TTL 120s; concurrent character creation blocker; no anti-cheat. “Perfect co-op” needs more than zombies.
 
-## 12. Next phase
+## 12. Zombie proxy patches prepared (2026-11-06)
 
-Plan written; waiting coordinator OK before any Windows build/deploy/retest of zombie proxies. No Windows placements from this agent. Saved isolation still broken from 2d. Do **not** claim QA `automated` or “perfect”.
+Hugo: keep improving (~10h AFK). Cloud implemented smallest levers as AGPL patch (no Windows placement from this agent):
+
+- Path: `games/surrondead/sdo-patches/0001-zombie-proxy-smallest-levers.patch` (against SDO `5d9a73d`)
+- Changes: FindObject non-class reject; `enable_zombie_proxies.flag` opt-in (default off); clear actor on teleport SEH; max 12 zombie actors; Roamer-only when enabled
+- Windows brief: `internal/phase3-zombie-proxy-build-brief.md` — apply → xmake → deploy copy → baseline off → flag on retest
+
+## 13. Next phase
+
+Coordinator should resume Windows worker with Phase 3a brief when ready. Then: log outcomes; Dog/Boss only if Roamer stable; ask Hugo before upstream PR vs hugge01 fork. Saved isolation still broken. Do **not** claim QA `automated` or “perfect”.
 
 ---
 
-## 13. Session log
+## 14. Session log
 
 | When | What |
 |---|---|
@@ -404,3 +412,4 @@ Plan written; waiting coordinator OK before any Windows build/deploy/retest of z
 | 2026-11-06 | Hugo wants deeper in-game checks. Wrote `internal/phase2-deeper-ingame-brief.md` (WASD past Barber, combat, zombie gap, vehicles if safe, Saved isolation). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
 | 2026-11-06 | Phase 2d done: teleport.flag; Hugo mutual visibility PASS; Barber+WASD PASS; combat partial; zombies confirm known gap; vehicles not tried; Saved isolation partial fail (real LOCALAPPDATA still written); live Steam clean; torn down. Folded §10d + PR. Coordinator asking Hugo next (friend howto / zombie fix / pause). No Windows placement. |
 | 2026-11-06 | Hugo priority = zombie visibility. Researched SDO README/issues/PRs/source comments (no binary RE). Wrote `internal/zombie-visibility-fix-plan.md` + §11; patch sketch flag-gated; ask before Windows build. PR #1 updated. |
+| 2026-11-06 | Hugo AFK ~10h: keep improving. Landed AGPL patch `sdo-patches/0001-…` + Phase 3a Windows brief. Asking coordinator to resume bc-f4712bbb for apply/build/flag-on retest (copy only). |
