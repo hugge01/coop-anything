@@ -28,14 +28,23 @@ Unofficial co-op via [SDO](https://github.com/DatGuySnowfox/SDO) (AGPL): UE4SS C
 ## Target feel (“perfect co-op”)
 
 - Same world, low lag, fight the same zombies.
-- See each other in world **and on the map** (party markers) — Hugo wants this; **not yet verified** on our test copy.
+- See each other in world **and on the map** (party markers).
+- Drop loot for each other; place buildables; share cars.
+
+## How those systems work in SDO (today)
+
+| | Design | Honest status |
+| --- | --- | --- |
+| **Dropping items** | Dedicated server stores ground loot as shared `GroundItem`s; both clients see/pick up the same drop (TTL + budget). | Worked on older 5.3 builds per author; **not re-proven** on our 0.8.0 smoke. |
+| **Placing / building** | Server tracks placed pieces; clients spawn structure actors. | **Broken on 5.6** — build hooks still point at the old pawn API (`SpawnBuild` moved). Don’t expect bases to sync until that is fixed. |
+| **Cars** | Map already has vehicle actors; SDO tries to “claim” them and sync use instead of spawning duplicates. | Code exists; **never successfully live-tested** (author + our short 2d pass). Treat as experimental/unknown. |
+| **Map markers** | Wanted. | **Unknown** — check next two-client session. |
 
 ## Known gaps (honest)
 
 - Zombies may be invisible until an opt-in proxy fix is verified (`enable_zombie_proxies.flag` path — experimental).
-- Map / compass peer markers: **unknown** (check next smoke: open map on both clients).
-- Vehicles untested; building broken on 5.6 per SDO README; combat not fully re-proven.
-- Gear is mostly local-save; server does not fully restore inventory yet.
+- Map peer markers, drop/pickup, vehicles: need explicit checks; building needs a code fix first.
+- Combat not fully re-proven; gear is mostly local-save (server inventory restore incomplete).
 
 ## Meetup debug
 

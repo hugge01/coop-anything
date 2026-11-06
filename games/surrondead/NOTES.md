@@ -354,6 +354,16 @@ Hugo priority: zombie visibility toward “perfect co-op” feel, **plus players
 
 **Map markers:** not checked in Phase 2c/2d smokes (**unknown** whether SDO already shows co-op peers on the in-game map). Game dump has `BP_PlayerMarker` / marker widgets; SDO README does **not** list map-marker sync as verified. Treat as a **wanted feature** for “perfect co-op” after zombie proxies (or a quick Windows check: open map with two clients and note PASS/FAIL).
 
+**Cars / place / drop (Hugo ask — status from SDO docs + our smokes, not new RE):**
+
+| Feature | How SDO intends it | Status on 5.6 / our copy |
+| --- | --- | --- |
+| **Drop items to each other** | Server owns `GroundItem` entities; drop → descriptor+state broadcast; other clients spawn/claim pickups; TTL + max-count. Own-drop uses native pickup claim so you don’t see duplicates. | Author: worked on **5.3**; listed under “not yet re-verified on 5.6.” **We have not smoke-tested drop/pickup.** |
+| **Place / build objects** | `PlacedStructure` entities + `SpawnBuild`/`Svr_SpawnBuild` hooks. | README **Broken**: hooks moved to `BuildingComponent` on 5.6 but still looked up on the pawn → placement **will not fire**. Needs rehome (Contributing #3). |
+| **Cars / vehicles** | Server broadcasts ~56 vehicle spawn-point entities; client does **not** spawn cars — `find_native_vehicle_near` adopts the level’s already-loaded vehicle actor and (intended) syncs use. | README: server+client code **built, never live-tested**. Our 2d: 56 entities broadcast, enter **not tried**. |
+
+Wanted for “perfect co-op” with map markers + visible zombies: shared loot drops, buildable placement, driveable synced vehicles.
+
 ### Observations (cited)
 
 - README **Broken/disabled**: `spawn_zombie_actor` returns `nullptr` on purpose after five live crashes / three guessed fixes; server sim + native spawner suppress stay on ([README](https://github.com/DatGuySnowfox/SDO/blob/master/README.md)).
@@ -417,3 +427,4 @@ Coordinator should resume Windows worker with Phase 3a brief when ready. Then: l
 | 2026-11-06 | Hugo priority = zombie visibility. Researched SDO README/issues/PRs/source comments (no binary RE). Wrote `internal/zombie-visibility-fix-plan.md` + §11; patch sketch flag-gated; ask before Windows build. PR #1 updated. |
 | 2026-11-06 | Hugo AFK ~10h: keep improving. Landed AGPL patch `sdo-patches/0001-…` + Phase 3a Windows brief. Asking coordinator to resume bc-f4712bbb for apply/build/flag-on retest (copy only). |
 | 2026-11-06 | Hugo: also want players visible **on the map**. Noted as wanted/unknown in NOTES + howto + Phase 3a checklist (not verified in 2d). |
+| 2026-11-06 | Hugo asks how cars / placing / dropping work. Documented from SDO README+code: drops=shared GroundItems (5.3 ok, 5.6 unverified); build=broken on 5.6; vehicles=code never live-tested. |
