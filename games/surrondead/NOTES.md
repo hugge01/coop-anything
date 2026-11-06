@@ -307,16 +307,17 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 
 | Item | Result |
 |---|---|
-| xmake | v3.1.2 via `winget install Xmake-io.Xmake` |
-| Build | `main.dll` after `scripts/gen_import_lib.ps1` (first link failed without `UE4SS.lib`) |
+| xmake | v3.1.2 via `winget install Xmake-io.Xmake` → `C:\Program Files\xmake\xmake.exe` |
+| Build | First `xmake build` → **LNK1181** missing `UE4SS.lib`; `scripts/gen_import_lib.ps1` → stub lib; rebuild OK → `D:\coop-test\SDO\build\out\main.dll` |
 | `main.dll` | 819712 bytes; SHA-256 `6E83B911F7D786FDE25124F93030CEF68AA6326F884F081D7053DE4CB2278854` |
-| Deploy | `deploy.ps1 -SkipBuild` into **copy** `ue4ss\Mods\SDO\` (`enabled.txt` + `dlls\main.dll`) |
+| Deploy | `deploy.ps1 -Win64 <copy Win64> -SkipBuild` → copy `ue4ss\Mods\SDO\` (`enabled.txt` + `dlls\main.dll`); live Steam still clean |
+| Build log | `D:\coop-test\tools\xmake-build.log` (private path) |
 
 ## 11. Next phase
 
-1. **Ask Hugo:** OK to stand up SDO **Node 22** server + **two-client smoke** on the test copy (build 26471822)?
-2. After OK: coordinator resumes Windows worker; smoke-boot UE4SS/SDO; note failures vs SDO README (zombies, combat, …).
-3. Revive: zombie proxies / 0.8.0 name audit.
+1. **Hugo OK’d** Node 22 + two-client smoke (test copy only). Brief: `internal/phase2-node-smoke-brief.md` — ports **42200**/ **42201** (code defaults; README’s 31000/31001 outdated), `npm install` in `D:\coop-test\SDO\server`, launch **copy** `SurrounDead-Win64-Shipping.exe` with `-sdo_*` args (never `steam://run` / live Steam).
+2. Coordinator resumes Windows worker [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48); smoke; write `internal/phase2-node-smoke-report.md`.
+3. Revive: zombie proxies / 0.8.0 name audit after smoke evidence.
 
 ---
 
@@ -336,4 +337,5 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 | 2026-11-06 | Phase 2 report SUCCESS-partial: test copy + UE4SS pin + SDO clone; **xmake missing** (MSVC present). Waiting Hugo OK to install xmake (or alt build path). |
 | 2026-11-06 | Hugo: **ok** to install xmake. Brief `internal/phase2-xmake-build-brief.md`; waiting coordinator Windows placement. |
 | 2026-11-06 | Coordinator resumed [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) with xmake-build brief (no new placement). Standing by for `internal/phase2-xmake-build-report.md`. |
-| 2026-11-06 | Phase 2b SUCCESS: xmake 3.1.2; `main.dll` built+deployed to copy only (SHA 6E83B911…). Waiting Hugo OK for Node server + two-client smoke. |
+| 2026-11-06 | Phase 2b SUCCESS: xmake 3.1.2; `main.dll` built+deployed to copy only (SHA 6E83B911…). Folded into §10b + PR. Waiting Hugo OK for Node server + two-client smoke. |
+| 2026-11-06 | Hugo: **OK** Node dedicated server + two-client smoke (test copy only). Wrote `internal/phase2-node-smoke-brief.md` (ports 42200/42201, npm, copy exe only — no live Steam). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |

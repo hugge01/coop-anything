@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Engine | Unreal Engine 5.6 (0.8.x; was 5.3) |
-| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS on copy; SDO @ `5d9a73d` built (`main.dll` SHA `6E83B911…8854`) and deployed to copy. No co-op clients run yet |
+| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS on copy; SDO @ `5d9a73d` built (`main.dll` SHA `6E83B911…8854`) and deployed to copy. Hugo OK’d Node + two-client smoke next; not run yet |
 | Projects | [SDO (SurrounDead Online)](https://github.com/DatGuySnowfox/SDO) (directory primary); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
 | QA level | none |
 | Last updated | 2026-11-06 |
@@ -28,7 +28,7 @@ Working notes: [NOTES.md](NOTES.md). Claim: [cranebeaker/coop-anything#334](http
 - UE 5.6 Shipping, Blueprint-heavy gameplay, UE4SS as the practical hook.
 - SteamSockets net driver and OnlineSubsystemSteam are compiled in; session/game-mode MP UI is incomplete (`BP_MPGameMode` referenced but missing from the pak per community recon).
 - Jigsaw Inventory ships substantial replication RPCs; EasyMultiSave for saves under `%LOCALAPPDATA%\SurrounDead\Saved`.
-- SDO bypasses unfinished engine session code: clients talk to a Node gateway (TCP 31000 / HTTP 31001) that owns world state.
+- SDO bypasses unfinished engine session code: clients talk to a Node gateway (TCP **42200** / HTTP **42201** in current `server/src/config.js`; older README still says 31000/31001) that owns world state.
 
 ## What we changed
 
@@ -48,6 +48,6 @@ Inherited from SDO (author): invisible zombies on clients; building hooks stale 
 
 ## Next steps
 
-1. Owner OK for Node 22 SDO server + two-client smoke on the test copy.
-2. Smoke-boot; file failures vs SDO README (zombie proxies, combat, …).
+1. Run Node 22 SDO server + two-client smoke on the test copy (Hugo OK’d; brief `internal/phase2-node-smoke-brief.md`). Launch **copy** exe only — never `steam://run`.
+2. File failures vs SDO README (zombie proxies, combat, …).
 3. Revive: zombie-proxy / 0.8.0 rename gaps.
