@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Engine | Unreal Engine 5.6 (0.8.x; was 5.3) |
-| Versions tested | none yet on this fork — public research against Patch 0.8.0 notes and mod READMEs only |
+| Versions tested | identity only: Hugo Steam build **26471822**, shipping exe SHA-256 `C2E211B4…F15118` (Win10 Pro); no co-op clients run yet |
 | Projects | [SDO (SurrounDead Online)](https://github.com/DatGuySnowfox/SDO) (directory primary); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
 | QA level | none |
 | Last updated | 2026-11-06 |

@@ -24,23 +24,27 @@ Full Phase 0 detail is folded into the sections below; session log at the end.
 | Dev / pub | Zurvivor / PlaySurrounDead | observed |
 | Store | Steam app **1645820**, Windows 64-bit | observed |
 | Public version | Patch **0.8.0 – Pandemic** (stable, 2026-11-05); UE **5.3 → 5.6** | observed |
-| Hugo Steam path | `<game dir>` = `…\Steam\steamapps\common\SurrounDead` (Windows) | observed (Hugo) |
+| Hugo OS | Windows 10 Pro — `NT 10.0.19045.0` | observed (Windows worker 2026-11-06) |
+| Hugo Steam path | `<game dir>` = Steam `steamapps\common\SurrounDead` (Windows) | observed |
 | Friends | Steam (platforms = Steam) | observed (Hugo) |
-| Steam build id on Hugo’s PC | **unknown** — read `appmanifest_1645820.acf` on his machine | unknown |
-| Branch (stable / Previous / experimental) | **unknown** — ask after 0.8.0 drop | unknown |
-| Main exe (typical) | `<game dir>\SurrounDead\Binaries\Win64\SurrounDead-Win64-Shipping.exe` | observed (SDO / FullerK55 / Nexus tutorial); confirm on copy |
-| SHA-256 of main exe | **unknown** — hash the **test copy** only | unknown |
-| Engine CL string | **unknown** until string dump on copy; SDO names UE **5.6.1** for Sep experimental | partial |
+| Steam build id | **26471822** (`TargetBuildID` same) | observed (appmanifest via Windows worker) |
+| Branch (BetaKey) | **none** in appmanifest (default/stable line; language `english`) | observed |
+| SizeOnDisk | 2000186958 bytes (~1.86 GiB); depot 1645821 manifest 6403181274628414723 | observed |
+| Main exe | `<game dir>\SurrounDead\Binaries\Win64\SurrounDead-Win64-Shipping.exe` (168432128 bytes); launcher `SurrounDead.exe` also at top level | observed |
+| SHA-256 of shipping exe | `C2E211B4FA93C9FBFA9E5296DA94DAF22D2950EE3133B48DA6EB17EF4FF15118` | observed (read-only hash of **live** exe via Windows worker; live install not modified) |
+| `Engine\Build\Build.version` | **absent** | observed |
+| Engine CL string | **unknown** — need string dump on a test copy; SDO names UE **5.6.1** for Sep experimental; Patch 0.8.0 notes say UE 5.6 | partial |
+| Saves folder | `%LOCALAPPDATA%\SurrounDead\Saved` exists | observed |
 
-Sources: Steam store; SteamDB app + patchnotes 26467602; Hugo’s answers; SDO README; FullerK55 NOTES.
+Sources: Steam store; SteamDB app + patchnotes 26467602; Hugo’s answers; SDO README; FullerK55 NOTES; Windows worker report `internal/surrondead-steam-identity.md` (agent bc-52d42668-18f3-5802-9f8f-214bb9e0f163 on worker Hugo Windows SurrounDead).
 
 ---
 
 ## 2. Hugo’s Phase 0 answers (2026-11-06)
 
-1. Friends on Steam; install path Windows as above (OS version not stated).
+1. Friends on Steam; install path Windows; OS later confirmed Win10 Pro 19045.
 2. Install path given.
-3. **OK** to make a test copy and hash the exe; never touch live install/saves.
+3. Earlier soft OK to test-copy + hash; identity hash done read-only on live exe. **Re-ask before creating a test copy or downloading UE4SS/SDO** (coordinator: still waiting on explicit OK).
 4. Networking track: **agent decides** (see §5).
 5. AGPL-SDO-only vs other mods: “idk” → **recommend AGPL SDO only** (Discord malware warning on other “co-op mods”). Soft recommendation; hard veto only if he objects. **Accepted 2026-11-06** (Hugo: “ok”).
 6. Draft PR: soft OK (“ok idk”) → opened draft [hugge01/coop-anything#1](https://github.com/hugge01/coop-anything/pull/1). Hugo confirmed “ok” again after the link.
@@ -269,27 +273,30 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 
 ### Guesses
 
-- His Steam library is on **0.8.0 stable** after Nov 5 (unverified).
+- Build **26471822** is the public 0.8.0 stable line (matches SteamDB patch timing; no BetaKey) — treat as 0.8.0 until contradicted.
 - Stable 0.8.0 animation/skeleton changes will break some SDO name lookups again.
 - Official MP remains too far out to wait for.
 
 ### Unknowns
 
-- Exact build id, branch, exe SHA-256, UE CL string on his disk.
-- Whether SDO two-client still works on 0.8.0 stable.
-- Whether UE4SS `1212-gd4aebbf0` boots 0.8.0 without custom signatures (#1204).
+- UE CL / engine string in the shipping exe (`Build.version` missing).
+- Whether SDO two-client still works on build **26471822** / 0.8.0 stable.
+- Whether UE4SS `1212-gd4aebbf0` boots this build without custom signatures (#1204).
 - Discord bug channels (not exported).
 - Anti-cheat / SteamStub quirks on dual instance — unchecked.
+- Explicit Hugo OK for **test copy creation** and for **pinned UE4SS + SDO download onto that copy only**.
 
 ---
 
 ## 10. Next phase
 
-1. Hugo (or local worker): run §7 → fill `local/identity.md`.
-2. Hugo OK → download pinned UE4SS experimental into the **test copy** only; smoke-boot with console.
+**Identity done** (buildid + SHA-256). Stopped before test copy / downloads.
+
+1. **Ask Hugo:** (1) OK to create a test copy of the install (leave Steam folder alone)? (2) OK to download pinned UE4SS experimental + clone/build SDO onto that **test copy only**?
+2. After both OKs: create test copy (§7), verify exe SHA matches, install UE4SS experimental into the copy, smoke-boot.
 3. Clone SDO (AGPL), build with xmake/MSVC, deploy per README; stand up Node 22 server on LAN.
-4. Two-client smoke on 0.8.0; file failures against SDO README bug list (especially zombies + combat).
-5. Phase 5 revive work starts at zombie proxies / 0.8.0 name audit — not a greenfield sync layer.
+4. Two-client smoke on build 26471822; file failures against SDO README bug list (especially zombies + combat).
+5. Revive work starts at zombie proxies / 0.8.0 name audit — not a greenfield sync layer.
 
 ---
 
@@ -303,3 +310,4 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 | 2026-11-06 | Hugo asked agent to read install from his PC; clarified he is on **Windows**. Only connected self-hosted worker is **Hugo's MacBook Pro** (darwin) — cannot see `C:\Program Files (x86)\Steam\...`. Blocked until a Windows worker is online or he pastes §7 output. |
 | 2026-11-06 | Hugo asked to connect this Windows PC instead. Yes: run Cursor CLI `agent worker start` on the Windows box (docs: https://cursor.com/docs/cloud-agent/self-hosted/my-machines). Agent cannot start that remotely; waiting for Windows worker to appear. |
 | 2026-11-06 | Windows worker **Hugo Windows SurrounDead** connected (`72bfb90e-501e-4bc1-a08d-56617b8d6d75`). Two Task probes ([bc-513446ff…](bc-513446ff-fab7-5b47-a754-b1784799e4fa), [bc-4bd178b2…](bc-4bd178b2-60bc-57bd-a134-7a80c80e7f89)) ignored `workerId` and ran on Linux cloud. Asked coordinator for real placement; no more retries from this agent until then. |
+| 2026-11-06 | Coordinator-placed [Windows identity worker](bc-52d42668-18f3-5802-9f8f-214bb9e0f163) SUCCESS: buildid 26471822, exe SHA-256 C2E211B4…F15118, Win10 Pro 19045, Saved exists. Folded into NOTES + local/identity. No test copy / UE4SS / SDO yet — re-ask Hugo. |
