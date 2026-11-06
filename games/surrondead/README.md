@@ -52,4 +52,6 @@ Invisible zombies on clients (`spawn_zombie_actor` returns null — expected unt
 
 ## Next steps
 
-Owner choosing among: friend-facing howto, zombie-proxy fix / 0.8.0 name audit, or pause. No further Windows work until that call.
+1. Zombie proxy visibility — plan in store `internal/zombie-visibility-fix-plan.md` (SDO README/source; flag-gated re-enable; ask before Windows build).
+2. Broader “same world” gaps still open per SDO docs: vehicles, building hook, combat re-verify, server inventory restore.
+3. Friend-facing howto only after a stable visibility pass (or owner pause).

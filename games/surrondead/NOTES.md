@@ -347,13 +347,42 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 | Vehicles | **Not tried** successfully (56 entities broadcast; no enter prompt; skipped further hunt) |
 | Live Steam | clean; clients + Node torn down |
 
-## 11. Next phase
+## 11. Zombie visibility research (2026-11-06)
 
-Coordinator asked Hugo: **friend howto** / **zombie fix** / **pause**. Standing by — no Windows placements from this agent. If zombie-proxy revive is chosen: re-enable `spawn_zombie_actor` path + 0.8.0 name audit. Saved isolation still needs a verified wrapper before disposable-profile claims. Do **not** claim QA `automated`.
+Hugo priority: zombie visibility toward “perfect co-op” feel. Full plan: store `internal/zombie-visibility-fix-plan.md`. Sources = SDO README / AGPL source comments / Session 59 investigation log / Reddit announcement / GitHub issues (only #1 Discord ask — **no** zombie issue threads). No SurrounDead binary RE this turn; no Windows placement.
+
+### Observations (cited)
+
+- README **Broken/disabled**: `spawn_zombie_actor` returns `nullptr` on purpose after five live crashes / three guessed fixes; server sim + native spawner suppress stay on ([README](https://github.com/DatGuySnowfox/SDO/blob/master/README.md)).
+- Same author on Reddit: invisible to clients; can still hurt; rendering crashes never root-caused ([thread](https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/)).
+- `entity_manager.cpp` + Session 59: controller UnPossess was a red herring; crashes persisted at same addresses without controller code; leading theory = untyped `FindObject` → bad `UClass*` cache and/or dangling actor on roam teleport. Hardening partially landed (`resolve_class_by_name` FindFirstOf-primary; SEH teleport) but spawn still `#if 0` / early zombie skips.
+- Our Phase 2d: confirms invisible + disabled spawn path on build 26471822.
+
+### Guesses (author / ours — labeled in plan)
+
+Ranked hypotheses A–E in the plan (FindObject type, dangling actor, AI lifetime, 0.8 archetype rename, all-clients broadcast lag).
+
+### Proposed fix order (smallest lever first)
+
+1. Type-check FindObject fallback (never cache non-UClass).  
+2. Stronger teleport invalidation after SEH.  
+3. Flag-gate `enable_zombie_proxies.flag` (default off).  
+4. Cap / near-player spawn before full flood.  
+5. Re-enable Roamer-only under flag with heavy logging — **ask coordinator before Windows build/deploy**.  
+6. Then Dog/Boss, combat, server relevance.  
+7. Ask Hugo only if blocked on **upstream PR vs hugge01 fork**.
+
+### Other SDO-documented sync gaps (not invented)
+
+Vehicles never live-tested; building hook stale on 5.6; combat/death unverified on 5.6; server inventory restore incomplete; ticket TTL 120s; concurrent character creation blocker; no anti-cheat. “Perfect co-op” needs more than zombies.
+
+## 12. Next phase
+
+Plan written; waiting coordinator OK before any Windows build/deploy/retest of zombie proxies. No Windows placements from this agent. Saved isolation still broken from 2d. Do **not** claim QA `automated` or “perfect”.
 
 ---
 
-## 12. Session log
+## 13. Session log
 
 | When | What |
 |---|---|
@@ -374,3 +403,4 @@ Coordinator asked Hugo: **friend howto** / **zombie fix** / **pause**. Standing 
 | 2026-11-06 | Phase 2c SUCCESS (manual smoke, not automated): Node 25.2.1; both copy clients auth+session; health `players:2`; clothing equip sync; FirstJoin Barber only; ContinueGame used real LOCALAPPDATA Saved (backup exists); live Steam untouched; torn down. Folded into §10c + PR. Coordinator asking Hugo what’s next. No Windows placement from this agent. |
 | 2026-11-06 | Hugo wants deeper in-game checks. Wrote `internal/phase2-deeper-ingame-brief.md` (WASD past Barber, combat, zombie gap, vehicles if safe, Saved isolation). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
 | 2026-11-06 | Phase 2d done: teleport.flag; Hugo mutual visibility PASS; Barber+WASD PASS; combat partial; zombies confirm known gap; vehicles not tried; Saved isolation partial fail (real LOCALAPPDATA still written); live Steam clean; torn down. Folded §10d + PR. Coordinator asking Hugo next (friend howto / zombie fix / pause). No Windows placement. |
+| 2026-11-06 | Hugo priority = zombie visibility. Researched SDO README/issues/PRs/source comments (no binary RE). Wrote `internal/zombie-visibility-fix-plan.md` + §11; patch sketch flag-gated; ask before Windows build. PR #1 updated. |
