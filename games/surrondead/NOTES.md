@@ -287,18 +287,32 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 
 ---
 
-## 10. Next phase
+## 10. Phase 2 workspace (Windows) — 2026-11-06
 
-**Identity done.** Hugo OK’d test copy + pinned UE4SS/SDO on copy only (2026-11-06).
+Done by [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) on Hugo Windows SurrounDead. Full report: `internal/phase2-windows-workspace-report.md`. Live Steam untouched.
 
-1. Coordinator places Windows worker with brief `/cursor/stores/bc-3a2213a1-d8fe-4edc-b09c-ac9aed1898af/internal/phase2-windows-workspace-brief.md` (this agent cannot place there).
-2. Test copy + SHA verify + UE4SS pin into copy + SDO clone; build if toolchain present (ask before installing VS Build Tools).
-3. Smoke-boot UE4SS on the copy; then Node 22 server + two-client smoke on build 26471822.
-4. Revive work: zombie proxies / 0.8.0 name audit.
+| Item | Result |
+|---|---|
+| Saved backup | out-of-tree backup created (36 files) |
+| Test copy | SHA-256 matches live; buildid 26471822 |
+| UE4SS | `UE4SS_v3.0.1-1212-gd4aebbf0.zip` digest **matched**; installed into **copy** Win64 only (`dwmapi.dll` + `ue4ss\`) + `steam_appid.txt` = 1645820 |
+| SDO clone | `master` @ `5d9a73d2b05b888abf64990eb003b6446abdf0d9` |
+| SDO build | **blocked** — xmake missing; MSVC/VS Community 2026 present; mod not deployed yet |
+
+Private absolute paths stay in `local/identity.md`.
+
+## 11. Next phase
+
+1. **Ask Hugo:** OK to install **xmake** (lightweight; SDO’s maintained build path), or prefer MSBuild/`SDO.vcxproj` / CMake instead?
+2. After build OK: deploy `main.dll` into copy `ue4ss\Mods\SDO\` only; smoke-boot UE4SS on the copy.
+3. Node 22 server + two-client smoke on build 26471822.
+4. Revive: zombie proxies / 0.8.0 name audit.
+
+Do not place further Windows agents from this cloud worker until Hugo answers xmake.
 
 ---
 
-## 11. Session log
+## 12. Session log
 
 | When | What |
 |---|---|
@@ -311,3 +325,4 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 | 2026-11-06 | Coordinator-placed [Windows identity worker](bc-52d42668-18f3-5802-9f8f-214bb9e0f163) SUCCESS: buildid 26471822, exe SHA-256 C2E211B4…F15118, Win10 Pro 19045, Saved exists. Folded into NOTES + local/identity. No test copy / UE4SS / SDO yet — re-ask Hugo. |
 | 2026-11-06 | Hugo: **ok to both** (test copy + pinned UE4SS/SDO on copy only). Brief for Windows placement: `internal/phase2-windows-workspace-brief.md`. This agent will not self-place on Windows. |
 | 2026-11-06 | Coordinator placed [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) on Hugo Windows SurrounDead. Standing by for `internal/phase2-windows-workspace-report.md`. |
+| 2026-11-06 | Phase 2 report SUCCESS-partial: test copy + UE4SS pin + SDO clone; **xmake missing** (MSVC present). Waiting Hugo OK to install xmake (or alt build path). |
