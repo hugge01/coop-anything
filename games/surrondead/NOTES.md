@@ -284,19 +284,17 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 - Whether UE4SS `1212-gd4aebbf0` boots this build without custom signatures (#1204).
 - Discord bug channels (not exported).
 - Anti-cheat / SteamStub quirks on dual instance — unchecked.
-- Explicit Hugo OK for **test copy creation** and for **pinned UE4SS + SDO download onto that copy only**.
 
 ---
 
 ## 10. Next phase
 
-**Identity done** (buildid + SHA-256). Stopped before test copy / downloads.
+**Identity done.** Hugo OK’d test copy + pinned UE4SS/SDO on copy only (2026-11-06).
 
-1. **Ask Hugo:** (1) OK to create a test copy of the install (leave Steam folder alone)? (2) OK to download pinned UE4SS experimental + clone/build SDO onto that **test copy only**?
-2. After both OKs: create test copy (§7), verify exe SHA matches, install UE4SS experimental into the copy, smoke-boot.
-3. Clone SDO (AGPL), build with xmake/MSVC, deploy per README; stand up Node 22 server on LAN.
-4. Two-client smoke on build 26471822; file failures against SDO README bug list (especially zombies + combat).
-5. Revive work starts at zombie proxies / 0.8.0 name audit — not a greenfield sync layer.
+1. Coordinator places Windows worker with brief `/cursor/stores/bc-3a2213a1-d8fe-4edc-b09c-ac9aed1898af/internal/phase2-windows-workspace-brief.md` (this agent cannot place there).
+2. Test copy + SHA verify + UE4SS pin into copy + SDO clone; build if toolchain present (ask before installing VS Build Tools).
+3. Smoke-boot UE4SS on the copy; then Node 22 server + two-client smoke on build 26471822.
+4. Revive work: zombie proxies / 0.8.0 name audit.
 
 ---
 
