@@ -332,12 +332,7 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 
 ## 11. Next phase
 
-Coordinator asked Hugo what’s next. Candidates from smoke caveats + revive path:
-
-1. Dismiss Barber; confirm free movement + on-screen peer (same smoke setup).
-2. Raise `SDO_TICKET_TTL_MS` / mint-immediately habit; optional per-client Saved isolation.
-3. Revive: zombie proxies / 0.8.0 name audit; combat/vehicles when Hugo OKs a longer session.
-4. Do **not** claim QA `automated` until a scripted harness exists.
+Hugo wants **deeper in-game checks** next. Brief: `internal/phase2-deeper-ingame-brief.md` (free WASD past Barber, combat, zombie visibility/sync as known SDO gap, vehicles if safe; isolated Saved under `D:\coop-test\appdata-smoke-*`; copy exe + Node 42200/42201; never live Steam). Waiting coordinator resume of [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). After that: zombie-proxy revive / 0.8.0 name audit. Do **not** claim QA `automated` until a harness exists.
 
 ---
 
@@ -360,3 +355,4 @@ Coordinator asked Hugo what’s next. Candidates from smoke caveats + revive pat
 | 2026-11-06 | Phase 2b SUCCESS: xmake 3.1.2; `main.dll` built+deployed to copy only (SHA 6E83B911…). Folded into §10b + PR. Waiting Hugo OK for Node server + two-client smoke. |
 | 2026-11-06 | Hugo: **OK** Node dedicated server + two-client smoke (test copy only). Wrote `internal/phase2-node-smoke-brief.md` (ports 42200/42201, npm, copy exe only — no live Steam). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
 | 2026-11-06 | Phase 2c SUCCESS (manual smoke, not automated): Node 25.2.1; both copy clients auth+session; health `players:2`; clothing equip sync; FirstJoin Barber only; ContinueGame used real LOCALAPPDATA Saved (backup exists); live Steam untouched; torn down. Folded into §10c + PR. Coordinator asking Hugo what’s next. No Windows placement from this agent. |
+| 2026-11-06 | Hugo wants deeper in-game checks. Wrote `internal/phase2-deeper-ingame-brief.md` (WASD past Barber, combat, zombie gap, vehicles if safe, Saved isolation). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
