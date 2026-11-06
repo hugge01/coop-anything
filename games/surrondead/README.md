@@ -3,14 +3,14 @@
 | | |
 |---|---|
 | Engine | Unreal Engine 5.6 (0.8.x; was 5.3) |
-| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS; SDO @ `5d9a73d` (`main.dll` SHA `6E83B911…8854`); Node **25.2.1** two-client smoke on copy (ports 42200/42201) |
+| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS; SDO @ `5d9a73d` (`main.dll` SHA `6E83B911…8854`); Node **25.2.1**; manual two-client smokes on copy (ports 42200/42201), including deeper in-world pass |
 | Projects | [SDO (SurrounDead Online)](https://github.com/DatGuySnowfox/SDO) (directory primary); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
-| QA level | none (manual two-client smoke only — **not** automated) |
+| QA level | none (manual two-client smokes only — **not** automated) |
 | Last updated | 2026-11-06 |
 
 ## Where things stand
 
-Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). The furthest open fan project is **SDO**: a UE4SS C++ mod plus a Node.js dedicated server. On Hugo’s build **26471822** test copy we confirmed two copy clients can auth to a local Node host, latch session, show proxies, and sync clothing equip (still on FirstJoin Barber; free move / zombies / combat not tried). Author’s earlier 5.6 notes still apply for invisible zombies and unverified combat/vehicles. Path: **revive SDO**, not a third architecture.
+Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). Furthest open fan project: **SDO** (UE4SS C++ + Node dedicated). On Hugo’s **26471822** test copy, two clients auth, latch session, move past Barber, and **see each other** (Hugo-confirmed). Clothing equip sync works. Zombies stay invisible (SDO disables client zombie proxies — confirmed). Combat/vehicles still weak/untested. Path: **revive SDO**, not a third architecture.
 
 ## Existing work
 
@@ -32,23 +32,24 @@ Working notes: [NOTES.md](NOTES.md). Claim: [cranebeaker/coop-anything#334](http
 
 ## What we changed
 
-Nothing in the live game. On a **test copy**: pinned UE4SS experimental; SDO cloned @ `5d9a73d`, built with xmake 3.1.2 (`gen_import_lib.ps1` then `xmake build`), deployed via `deploy.ps1` into copy `ue4ss\Mods\SDO\` only. Ran a local Node host + two copy clients for smoke (torn down after).
+Nothing in the live game. On a **test copy**: pinned UE4SS experimental; SDO cloned @ `5d9a73d`, built with xmake 3.1.2, deployed into copy `ue4ss\Mods\SDO\` only. Local Node host + two copy clients for manual smokes (torn down after). Debug meetups via `%APPDATA%\SDO\teleport.flag` (SDO `check_teleport_trigger`).
 
 ## QA
 
-- Level: **none** — one **manual** two-client smoke on the owner’s Windows test copy (2026-11-06). **Not** an automated harness; do not set directory `qa: automated`.
-- Asserted (logs): both clients UE4SS+SDO loaded; auth + session latch; health `players:2`; proxy spawn; clothing equip sync. Partial: world reached via auto `ContinueGame`, but FirstJoin Barber blocked free-move check. Unknown / not tried: on-screen peer after Barber, weapon-in-hand visual, zombies, combat, vehicles.
-- Caveat: smoke used real `%LOCALAPPDATA%\SurrounDead\Saved` (out-of-tree backup exists). Default ticket TTL **120s** is tight for dual boot — mint fresh tickets immediately before launch.
-- Details: `games/surrondead/NOTES.md` §10c; store report `internal/phase2-node-smoke-report.md`.
+- Level: **none** — **manual** two-client smokes on the owner’s Windows test copy (2026-11-06). **Not** an automated harness; do not set directory `qa: automated`.
+- Phase 2c: auth + session latch; health `players:2`; clothing equip sync; stuck on FirstJoin Barber.
+- Phase 2d: Barber dismissed + free WASD **PASS**; mutual visibility **PASS** (Hugo); combat **partial** (fired, no confirmed hits in safezone); zombies **confirm known gap** (invisible; `spawn_zombie_actor` disabled); vehicles **not tried**; Saved LOCALAPPDATA isolation **partial fail** (real profile still written).
+- Caveats: raise `SDO_TICKET_TTL_MS` for dual boot; mint tickets immediately before launch; Esc opens pause and blocks input automation; teleport.flag is shared APPDATA (one consumer per write).
+- Details: `games/surrondead/NOTES.md` §10c–§10d; store reports `internal/phase2-node-smoke-report.md`, `internal/phase2-deeper-ingame-report.md`.
 
 ## How to play
 
-Not ready for friends. Local revive path: UE4SS experimental on a **test copy**, build SDO `main.dll`, Node 22+ server on **42200/42201**, ticketed join launching the **copy** exe with `-sdo_*` (never `steam://run` / live Steam folder).
+Not ready for friends yet (no polished howto). Local revive path: UE4SS experimental on a **test copy**, build SDO `main.dll`, Node 22+ on **42200/42201**, ticketed join of the **copy** exe with `-sdo_*` (never `steam://run` / live Steam). Optional meetup: write `x y z [yaw]` to `%APPDATA%\SDO\teleport.flag` once per client (sequential).
 
 ## Known issues
 
-Inherited from SDO (author): invisible zombies on clients; building hooks stale on 5.6; vehicles untested; combat/death not re-verified on 5.6; setup is manual. Our smoke: FirstJoin Barber on new `playerId`s; ticket TTL surprises; shared `%APPDATA%\SDO` logs across dual instances.
+Invisible zombies on clients (`spawn_zombie_actor` returns null — expected until re-enabled). Combat/death not proven outside safezone. Vehicles untested here. Building hooks stale on 5.6 (author). Saved isolation via process `LOCALAPPDATA` override failed on PS 5.1 in our run. Ticket TTL default 120s; shared `%APPDATA%\SDO` across dual instances.
 
 ## Next steps
 
-Owner/coordinator deciding next. Likely: dismiss Barber + free-move peer check; then zombie-proxy / 0.8.0 rename work; longer combat/vehicles session when OK’d.
+Owner choosing among: friend-facing howto, zombie-proxy fix / 0.8.0 name audit, or pause. No further Windows work until that call.

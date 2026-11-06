@@ -280,10 +280,10 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 ### Unknowns
 
 - UE CL / engine string in the shipping exe (`Build.version` missing).
-- Free WASD + on-screen peer after dismissing FirstJoin Barber (smoke stopped on Barber UI).
-- Zombies / combat / vehicles on build **26471822** (not tried in Phase 2c).
+- Confirmed hit/death combat outside safezone; vehicle enter/sync on **26471822**.
+- Reliable per-process Saved isolation (LOCALAPPDATA override via ProcessStartInfo failed in 2d).
 - Discord bug channels (not exported).
-- Anti-cheat / SteamStub quirks beyond this dual-instance copy smoke.
+- Anti-cheat / SteamStub quirks beyond dual-instance copy smokes.
 
 ---
 
@@ -330,9 +330,26 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 | Saves | SDO auto `ContinueGame` → used real `%LOCALAPPDATA%\SurrounDead\Saved` (backup still at `D:\coop-test\SurrounDead-Saved-backup-20261106`) |
 | Live Steam | untouched; clients + Node torn down after smoke |
 
+## 10d. Phase 2d — deeper in-game (2026-11-06)
+
+Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `internal/phase2-deeper-ingame-report.md`. Manual deeper smoke — **not** automated QA.
+
+| Item | Result |
+|---|---|
+| Node / ports | v25.2.1; **42200** / **42201**; TTL raised to 600000 ms; tickets `deep-a`/`deep-b` |
+| Launch | Copy Shipping + `-sdo_*` only; never Steam |
+| Saved isolation | **Partial fail** — intended `D:\coop-test\appdata-smoke-{a,b}\Local`; `ProcessStartInfo` LOCALAPPDATA override did not stick; real `%LOCALAPPDATA%\SurrounDead\Saved` still received writes (`UserSettings.ini`, CrashReportClient). Backup still present. |
+| Teleport | `%APPDATA%\SDO\teleport.flag` → `check_teleport_trigger` (`mod.cpp`); shared APPDATA ⇒ one consumer per write; sequential writes with offsets. Safezone barber `115013.6 133181.6 1185.0` (+ offsets). |
+| Barber + WASD | **PASS** — Barber dismissed; free-play HUD; WASD with caveat (Esc opened pause and blocked some input) |
+| Mutual visibility | **PASS** — **Hugo** both see each other; agent shot `after-tp-A.png` shows peer; logs `proxy spawned` ×2; health `players:2` |
+| Combat | **PARTIAL** — LMB bursts; ammo drained to `000/000`; no clear damage/death in server log (safezone likely limited PvE) |
+| Zombies | **Confirms known SDO gap** — none visible on shots; `spawn_zombie_actor` returns `nullptr` / proxy render disabled in `entity_manager.cpp` |
+| Vehicles | **Not tried** successfully (56 entities broadcast; no enter prompt; skipped further hunt) |
+| Live Steam | clean; clients + Node torn down |
+
 ## 11. Next phase
 
-Hugo wants **deeper in-game checks** next. Brief: `internal/phase2-deeper-ingame-brief.md` (free WASD past Barber, combat, zombie visibility/sync as known SDO gap, vehicles if safe; isolated Saved under `D:\coop-test\appdata-smoke-*`; copy exe + Node 42200/42201; never live Steam). Waiting coordinator resume of [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). After that: zombie-proxy revive / 0.8.0 name audit. Do **not** claim QA `automated` until a harness exists.
+Coordinator asked Hugo: **friend howto** / **zombie fix** / **pause**. Standing by — no Windows placements from this agent. If zombie-proxy revive is chosen: re-enable `spawn_zombie_actor` path + 0.8.0 name audit. Saved isolation still needs a verified wrapper before disposable-profile claims. Do **not** claim QA `automated`.
 
 ---
 
@@ -356,3 +373,4 @@ Hugo wants **deeper in-game checks** next. Brief: `internal/phase2-deeper-ingame
 | 2026-11-06 | Hugo: **OK** Node dedicated server + two-client smoke (test copy only). Wrote `internal/phase2-node-smoke-brief.md` (ports 42200/42201, npm, copy exe only — no live Steam). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
 | 2026-11-06 | Phase 2c SUCCESS (manual smoke, not automated): Node 25.2.1; both copy clients auth+session; health `players:2`; clothing equip sync; FirstJoin Barber only; ContinueGame used real LOCALAPPDATA Saved (backup exists); live Steam untouched; torn down. Folded into §10c + PR. Coordinator asking Hugo what’s next. No Windows placement from this agent. |
 | 2026-11-06 | Hugo wants deeper in-game checks. Wrote `internal/phase2-deeper-ingame-brief.md` (WASD past Barber, combat, zombie gap, vehicles if safe, Saved isolation). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
+| 2026-11-06 | Phase 2d done: teleport.flag; Hugo mutual visibility PASS; Barber+WASD PASS; combat partial; zombies confirm known gap; vehicles not tried; Saved isolation partial fail (real LOCALAPPDATA still written); live Steam clean; torn down. Folded §10d + PR. Coordinator asking Hugo next (friend howto / zombie fix / pause). No Windows placement. |

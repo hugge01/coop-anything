@@ -10750,15 +10750,14 @@
   qa: none
   notes: >-
     AGPL-3.0-or-later UE4SS C++ client mod plus a Node.js dedicated server (SQLite world state).
-    Author mid-port to UE 5.6 after the experimental 0.8 bump; last push 2026-09-27. Coop-anything
-    revive on Hugo Steam build 26471822 (test copy only): SDO @ 5d9a73d built/deployed; manual
-    two-client smoke 2026-11-06 (Node 25.2.1, ports 42200/42201) got auth+session, health
-    players:2, proxy spawn and clothing equip sync; clients stayed on FirstJoin Barber so free
-    move / on-screen peer / weapon visual unchecked; zombies/combat/vehicles not tried. QA stays
-    none (not an automated harness). Author still reports invisible zombie proxies on 5.6.
-    Needs UE4SS experimental-latest (not v3.0.1), Node 22+, xmake/MSVC. No GitHub releases.
-    Official co-op still planned, not shipping as of Patch 0.8.0 (2026-11-05). Write-up in
-    games/surrondead. Claim #334.
+    Author mid-port to UE 5.6; last push 2026-09-27. Coop-anything revive on Hugo Steam build
+    26471822 (test copy only): SDO @ 5d9a73d built/deployed. Manual two-client smokes 2026-11-06
+    (Node 25.2.1, ports 42200/42201): auth+session, health players:2, clothing equip, Barber
+    dismissed + free WASD, mutual visibility (Hugo-confirmed). Zombies invisible as expected
+    (spawn_zombie_actor disabled). Combat partial in safezone; vehicles not tried. LOCALAPPDATA
+    Saved isolation attempt failed (real profile still written). QA stays none (not automated).
+    Needs UE4SS experimental-latest, Node 22+, xmake/MSVC. No GitHub releases. Official co-op
+    still planned (Patch 0.8.0, 2026-11-05). Write-up games/surrondead. Claim #334.
   sources:
   - https://github.com/DatGuySnowfox/SDO
   - https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/
