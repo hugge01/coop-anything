@@ -281,6 +281,7 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 
 - UE CL / engine string in the shipping exe (`Build.version` missing).
 - Confirmed hit/death combat outside safezone; vehicle enter/sync on **26471822**.
+- Whether co-op peers appear on the in-game **map** / compass (Hugo wants yes; untested here).
 - Reliable per-process Saved isolation (LOCALAPPDATA override via ProcessStartInfo failed in 2d).
 - Discord bug channels (not exported).
 - Anti-cheat / SteamStub quirks beyond dual-instance copy smokes.
@@ -349,7 +350,9 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 
 ## 11. Zombie visibility research (2026-11-06)
 
-Hugo priority: zombie visibility toward “perfect co-op” feel. Full plan: store `internal/zombie-visibility-fix-plan.md`. Sources = SDO README / AGPL source comments / Session 59 investigation log / Reddit announcement / GitHub issues (only #1 Discord ask — **no** zombie issue threads). No SurrounDead binary RE this turn; no Windows placement.
+Hugo priority: zombie visibility toward “perfect co-op” feel, **plus players visible on each other’s map** (party/map markers — Hugo ask 2026-11-06). Full zombie plan: store `internal/zombie-visibility-fix-plan.md`. Sources = SDO README / AGPL source comments / Session 59 investigation log / Reddit announcement / GitHub issues (only #1 Discord ask — **no** zombie issue threads). No SurrounDead binary RE this turn; no Windows placement.
+
+**Map markers:** not checked in Phase 2c/2d smokes (**unknown** whether SDO already shows co-op peers on the in-game map). Game dump has `BP_PlayerMarker` / marker widgets; SDO README does **not** list map-marker sync as verified. Treat as a **wanted feature** for “perfect co-op” after zombie proxies (or a quick Windows check: open map with two clients and note PASS/FAIL).
 
 ### Observations (cited)
 
@@ -374,7 +377,7 @@ Ranked hypotheses A–E in the plan (FindObject type, dangling actor, AI lifetim
 
 ### Other SDO-documented sync gaps (not invented)
 
-Vehicles never live-tested; building hook stale on 5.6; combat/death unverified on 5.6; server inventory restore incomplete; ticket TTL 120s; concurrent character creation blocker; no anti-cheat. “Perfect co-op” needs more than zombies.
+Vehicles never live-tested; building hook stale on 5.6; combat/death unverified on 5.6; server inventory restore incomplete; ticket TTL 120s; concurrent character creation blocker; no anti-cheat. “Perfect co-op” needs more than zombies — Hugo also wants **see each other on the map**.
 
 ## 12. Zombie proxy patches prepared (2026-11-06)
 
@@ -413,3 +416,4 @@ Coordinator should resume Windows worker with Phase 3a brief when ready. Then: l
 | 2026-11-06 | Phase 2d done: teleport.flag; Hugo mutual visibility PASS; Barber+WASD PASS; combat partial; zombies confirm known gap; vehicles not tried; Saved isolation partial fail (real LOCALAPPDATA still written); live Steam clean; torn down. Folded §10d + PR. Coordinator asking Hugo next (friend howto / zombie fix / pause). No Windows placement. |
 | 2026-11-06 | Hugo priority = zombie visibility. Researched SDO README/issues/PRs/source comments (no binary RE). Wrote `internal/zombie-visibility-fix-plan.md` + §11; patch sketch flag-gated; ask before Windows build. PR #1 updated. |
 | 2026-11-06 | Hugo AFK ~10h: keep improving. Landed AGPL patch `sdo-patches/0001-…` + Phase 3a Windows brief. Asking coordinator to resume bc-f4712bbb for apply/build/flag-on retest (copy only). |
+| 2026-11-06 | Hugo: also want players visible **on the map**. Noted as wanted/unknown in NOTES + howto + Phase 3a checklist (not verified in 2d). |

@@ -10,7 +10,7 @@
 
 ## Where things stand
 
-Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). Furthest open fan project: **SDO** (UE4SS C++ + Node dedicated). On Hugo’s **26471822** test copy, two clients auth, latch session, move past Barber, and **see each other** (Hugo-confirmed). Clothing equip sync works. Zombies stay invisible (SDO disables client zombie proxies — confirmed). Combat/vehicles still weak/untested. Path: **revive SDO**, not a third architecture.
+Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). Furthest open fan project: **SDO** (UE4SS C++ + Node dedicated). On Hugo’s **26471822** test copy, two clients auth, latch session, move past Barber, and **see each other in world** (Hugo-confirmed). Clothing equip sync works. Owner also wants peers **on the map** (not verified yet). Zombies stay invisible (SDO disables client zombie proxies — confirmed). Combat/vehicles still weak/untested. Path: **revive SDO**, not a third architecture.
 
 ## Existing work
 

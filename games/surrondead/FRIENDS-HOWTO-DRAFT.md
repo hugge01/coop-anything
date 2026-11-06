@@ -25,9 +25,15 @@ Unofficial co-op via [SDO](https://github.com/DatGuySnowfox/SDO) (AGPL): UE4SS C
 3. Fresh ticket from host; launch with `-sdo_*` args.
 4. Expect FirstJoin Barber on new `playerId`s; dismiss before free play.
 
+## Target feel (“perfect co-op”)
+
+- Same world, low lag, fight the same zombies.
+- See each other in world **and on the map** (party markers) — Hugo wants this; **not yet verified** on our test copy.
+
 ## Known gaps (honest)
 
 - Zombies may be invisible until an opt-in proxy fix is verified (`enable_zombie_proxies.flag` path — experimental).
+- Map / compass peer markers: **unknown** (check next smoke: open map on both clients).
 - Vehicles untested; building broken on 5.6 per SDO README; combat not fully re-proven.
 - Gear is mostly local-save; server does not fully restore inventory yet.
 
