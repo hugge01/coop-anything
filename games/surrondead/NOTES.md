@@ -42,8 +42,8 @@ Sources: Steam store; SteamDB app + patchnotes 26467602; Hugo’s answers; SDO R
 2. Install path given.
 3. **OK** to make a test copy and hash the exe; never touch live install/saves.
 4. Networking track: **agent decides** (see §5).
-5. AGPL-SDO-only vs other mods: “idk” → **recommend AGPL SDO only** (Discord malware warning on other “co-op mods”). Soft recommendation; hard veto only if he objects.
-6. Draft PR: soft OK (“ok idk”) → open draft after NOTES/write-up ready; show him the PR link.
+5. AGPL-SDO-only vs other mods: “idk” → **recommend AGPL SDO only** (Discord malware warning on other “co-op mods”). Soft recommendation; hard veto only if he objects. **Accepted 2026-11-06** (Hugo: “ok”).
+6. Draft PR: soft OK (“ok idk”) → opened draft [hugge01/coop-anything#1](https://github.com/hugge01/coop-anything/pull/1). Hugo confirmed “ok” again after the link.
 
 ---
 
