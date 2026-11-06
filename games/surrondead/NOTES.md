@@ -325,3 +325,4 @@ Private absolute paths stay in `local/identity.md`.
 | 2026-11-06 | Coordinator placed [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) on Hugo Windows SurrounDead. Standing by for `internal/phase2-windows-workspace-report.md`. |
 | 2026-11-06 | Phase 2 report SUCCESS-partial: test copy + UE4SS pin + SDO clone; **xmake missing** (MSVC present). Waiting Hugo OK to install xmake (or alt build path). |
 | 2026-11-06 | Hugo: **ok** to install xmake. Brief `internal/phase2-xmake-build-brief.md`; waiting coordinator Windows placement. |
+| 2026-11-06 | Coordinator resumed [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) with xmake-build brief (no new placement). Standing by for `internal/phase2-xmake-build-report.md`. |
