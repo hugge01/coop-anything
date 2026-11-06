@@ -297,16 +297,26 @@ Done by [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) on 
 | Test copy | SHA-256 matches live; buildid 26471822 |
 | UE4SS | `UE4SS_v3.0.1-1212-gd4aebbf0.zip` digest **matched**; installed into **copy** Win64 only (`dwmapi.dll` + `ue4ss\`) + `steam_appid.txt` = 1645820 |
 | SDO clone | `master` @ `5d9a73d2b05b888abf64990eb003b6446abdf0d9` |
-| SDO build | **blocked** — xmake missing; MSVC/VS Community 2026 present; mod not deployed yet |
+| SDO build (later) | **OK** — see §10b |
 
 Private absolute paths stay in `local/identity.md`.
 
+## 10b. Phase 2b — xmake build + deploy (2026-11-06)
+
+Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `internal/phase2-xmake-build-report.md`. Live Steam untouched; game not launched.
+
+| Item | Result |
+|---|---|
+| xmake | v3.1.2 via `winget install Xmake-io.Xmake` |
+| Build | `main.dll` after `scripts/gen_import_lib.ps1` (first link failed without `UE4SS.lib`) |
+| `main.dll` | 819712 bytes; SHA-256 `6E83B911F7D786FDE25124F93030CEF68AA6326F884F081D7053DE4CB2278854` |
+| Deploy | `deploy.ps1 -SkipBuild` into **copy** `ue4ss\Mods\SDO\` (`enabled.txt` + `dlls\main.dll`) |
+
 ## 11. Next phase
 
-1. Hugo OK to install **xmake** (2026-11-06: “ok”). Brief: `internal/phase2-xmake-build-brief.md` — coordinator places Windows worker (this agent does not).
-2. After build: deploy `main.dll` into copy `ue4ss\Mods\SDO\` only; smoke-boot UE4SS on the copy.
-3. Node 22 server + two-client smoke on build 26471822.
-4. Revive: zombie proxies / 0.8.0 name audit.
+1. **Ask Hugo:** OK to stand up SDO **Node 22** server + **two-client smoke** on the test copy (build 26471822)?
+2. After OK: coordinator resumes Windows worker; smoke-boot UE4SS/SDO; note failures vs SDO README (zombies, combat, …).
+3. Revive: zombie proxies / 0.8.0 name audit.
 
 ---
 
@@ -326,3 +336,4 @@ Private absolute paths stay in `local/identity.md`.
 | 2026-11-06 | Phase 2 report SUCCESS-partial: test copy + UE4SS pin + SDO clone; **xmake missing** (MSVC present). Waiting Hugo OK to install xmake (or alt build path). |
 | 2026-11-06 | Hugo: **ok** to install xmake. Brief `internal/phase2-xmake-build-brief.md`; waiting coordinator Windows placement. |
 | 2026-11-06 | Coordinator resumed [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) with xmake-build brief (no new placement). Standing by for `internal/phase2-xmake-build-report.md`. |
+| 2026-11-06 | Phase 2b SUCCESS: xmake 3.1.2; `main.dll` built+deployed to copy only (SHA 6E83B911…). Waiting Hugo OK for Node server + two-client smoke. |

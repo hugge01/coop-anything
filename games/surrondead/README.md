@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Engine | Unreal Engine 5.6 (0.8.x; was 5.3) |
-| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS experimental on copy; SDO cloned @ `5d9a73d`; **not built yet** (xmake missing). No co-op clients run yet |
+| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS on copy; SDO @ `5d9a73d` built (`main.dll` SHA `6E83B911…8854`) and deployed to copy. No co-op clients run yet |
 | Projects | [SDO (SurrounDead Online)](https://github.com/DatGuySnowfox/SDO) (directory primary); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
 | QA level | none |
 | Last updated | 2026-11-06 |
@@ -32,7 +32,7 @@ Working notes: [NOTES.md](NOTES.md). Claim: [cranebeaker/coop-anything#334](http
 
 ## What we changed
 
-Nothing in the live game. Research + Phase 2 workspace on a **test copy**: pinned UE4SS experimental under the copy’s Win64 only; SDO cloned. SDO C++ mod not built yet (xmake missing; MSVC present).
+Nothing in the live game. On a **test copy**: pinned UE4SS experimental; SDO cloned @ `5d9a73d`, built with xmake 3.1.2 (`gen_import_lib.ps1` then `xmake build`), deployed via `deploy.ps1` into copy `ue4ss\Mods\SDO\` only.
 
 ## QA
 
@@ -48,6 +48,6 @@ Inherited from SDO (author): invisible zombies on clients; building hooks stale 
 
 ## Next steps
 
-1. Owner OK to install **xmake** (or use MSBuild/`SDO.vcxproj`) on the Windows PC.
-2. Build/deploy SDO into the test copy only; smoke-boot UE4SS.
-3. Two-client smoke on build 26471822; attack zombie-proxy and 0.8.0 rename gaps.
+1. Owner OK for Node 22 SDO server + two-client smoke on the test copy.
+2. Smoke-boot; file failures vs SDO README (zombie proxies, combat, …).
+3. Revive: zombie-proxy / 0.8.0 rename gaps.
