@@ -3,14 +3,14 @@
 | | |
 |---|---|
 | Engine | Unreal Engine 5.6 (0.8.x; was 5.3) |
-| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS on copy; SDO @ `5d9a73d` built (`main.dll` SHA `6E83B911…8854`) and deployed to copy. Hugo OK’d Node + two-client smoke next; not run yet |
+| Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS; SDO @ `5d9a73d` (`main.dll` SHA `6E83B911…8854`); Node **25.2.1** two-client smoke on copy (ports 42200/42201) |
 | Projects | [SDO (SurrounDead Online)](https://github.com/DatGuySnowfox/SDO) (directory primary); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
-| QA level | none |
+| QA level | none (manual two-client smoke only — **not** automated) |
 | Last updated | 2026-11-06 |
 
 ## Where things stand
 
-Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). The furthest open fan project is **SDO**: a UE4SS C++ mod plus a Node.js dedicated server. On UE 5.6 the author verified two clients moving and seeing each other with clothing/weapons; zombies stay invisible to clients, and combat/vehicles need re-testing after Patch 0.8.0. This fork’s path is to **revive SDO**, not start a third architecture.
+Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). The furthest open fan project is **SDO**: a UE4SS C++ mod plus a Node.js dedicated server. On Hugo’s build **26471822** test copy we confirmed two copy clients can auth to a local Node host, latch session, show proxies, and sync clothing equip (still on FirstJoin Barber; free move / zombies / combat not tried). Author’s earlier 5.6 notes still apply for invisible zombies and unverified combat/vehicles. Path: **revive SDO**, not a third architecture.
 
 ## Existing work
 
@@ -32,22 +32,23 @@ Working notes: [NOTES.md](NOTES.md). Claim: [cranebeaker/coop-anything#334](http
 
 ## What we changed
 
-Nothing in the live game. On a **test copy**: pinned UE4SS experimental; SDO cloned @ `5d9a73d`, built with xmake 3.1.2 (`gen_import_lib.ps1` then `xmake build`), deployed via `deploy.ps1` into copy `ue4ss\Mods\SDO\` only.
+Nothing in the live game. On a **test copy**: pinned UE4SS experimental; SDO cloned @ `5d9a73d`, built with xmake 3.1.2 (`gen_import_lib.ps1` then `xmake build`), deployed via `deploy.ps1` into copy `ue4ss\Mods\SDO\` only. Ran a local Node host + two copy clients for smoke (torn down after).
 
 ## QA
 
-- Level: **none**. No clients launched from this environment (no game install here).
+- Level: **none** — one **manual** two-client smoke on the owner’s Windows test copy (2026-11-06). **Not** an automated harness; do not set directory `qa: automated`.
+- Asserted (logs): both clients UE4SS+SDO loaded; auth + session latch; health `players:2`; proxy spawn; clothing equip sync. Partial: world reached via auto `ContinueGame`, but FirstJoin Barber blocked free-move check. Unknown / not tried: on-screen peer after Barber, weapon-in-hand visual, zombies, combat, vehicles.
+- Caveat: smoke used real `%LOCALAPPDATA%\SurrounDead\Saved` (out-of-tree backup exists). Default ticket TTL **120s** is tight for dual boot — mint fresh tickets immediately before launch.
+- Details: `games/surrondead/NOTES.md` §10c; store report `internal/phase2-node-smoke-report.md`.
 
 ## How to play
 
-Not ready. When SDO is built against the owner’s 0.8.0 test copy, follow upstream SDO README (UE4SS `experimental-latest`, Node 22+, xmake build, ticketed join). Do not install into the live Steam folder.
+Not ready for friends. Local revive path: UE4SS experimental on a **test copy**, build SDO `main.dll`, Node 22+ server on **42200/42201**, ticketed join launching the **copy** exe with `-sdo_*` (never `steam://run` / live Steam folder).
 
 ## Known issues
 
-Inherited from SDO (author): invisible zombies on clients; building hooks stale on 5.6; vehicles untested; combat/death not re-verified on 5.6; setup is manual. Patch 0.8.0 stable may need a fresh name/offset pass after SDO’s September experimental work.
+Inherited from SDO (author): invisible zombies on clients; building hooks stale on 5.6; vehicles untested; combat/death not re-verified on 5.6; setup is manual. Our smoke: FirstJoin Barber on new `playerId`s; ticket TTL surprises; shared `%APPDATA%\SDO` logs across dual instances.
 
 ## Next steps
 
-1. Run Node 22 SDO server + two-client smoke on the test copy (Hugo OK’d; brief `internal/phase2-node-smoke-brief.md`). Launch **copy** exe only — never `steam://run`.
-2. File failures vs SDO README (zombie proxies, combat, …).
-3. Revive: zombie-proxy / 0.8.0 rename gaps.
+Owner/coordinator deciding next. Likely: dismiss Barber + free-move peer check; then zombie-proxy / 0.8.0 rename work; longer combat/vehicles session when OK’d.

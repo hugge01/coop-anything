@@ -280,10 +280,10 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 ### Unknowns
 
 - UE CL / engine string in the shipping exe (`Build.version` missing).
-- Whether SDO two-client still works on build **26471822** / 0.8.0 stable.
-- Whether UE4SS `1212-gd4aebbf0` boots this build without custom signatures (#1204).
+- Free WASD + on-screen peer after dismissing FirstJoin Barber (smoke stopped on Barber UI).
+- Zombies / combat / vehicles on build **26471822** (not tried in Phase 2c).
 - Discord bug channels (not exported).
-- Anti-cheat / SteamStub quirks on dual instance — unchecked.
+- Anti-cheat / SteamStub quirks beyond this dual-instance copy smoke.
 
 ---
 
@@ -313,11 +313,31 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 | Deploy | `deploy.ps1 -Win64 <copy Win64> -SkipBuild` → copy `ue4ss\Mods\SDO\` (`enabled.txt` + `dlls\main.dll`); live Steam still clean |
 | Build log | `D:\coop-test\tools\xmake-build.log` (private path) |
 
+## 10c. Phase 2c — Node + two-client smoke (2026-11-06)
+
+Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `internal/phase2-node-smoke-report.md`. **Not** an automated QA suite — one manual two-client smoke with log evidence.
+
+| Item | Result |
+|---|---|
+| Node | **v25.2.1** / npm 11.13.0; `npm install` OK in `D:\coop-test\SDO\server` |
+| Ports | Gateway **42200** / HTTP **42201**; `SDO_PUBLIC_HOST=127.0.0.1`; directory blank |
+| Launch | **Copy** Shipping exe + `-sdo_host=127.0.0.1 -sdo_port=42200 -sdo_ticket=…` only; never `steam://run` |
+| Auth / session | Both clients `authenticated` / `joined` / `session latched` (first attempt hit **120s ticket TTL** → `expired_ticket`; fresh tickets OK) |
+| Health | `hostOnline:true`, **`players:2`**; two ESTABLISHED TCP clients on 42200 |
+| Proxies / clothing | `proxy spawned` ×2; `equip-clothing` ok; equipment frames exchanged. Free WASD **not** exercised (FirstJoin **Barber** UI up) |
+| Weapon-in-hand visual | **unknown** while on Barber |
+| Zombies / combat / vehicles | **not tried** |
+| Saves | SDO auto `ContinueGame` → used real `%LOCALAPPDATA%\SurrounDead\Saved` (backup still at `D:\coop-test\SurrounDead-Saved-backup-20261106`) |
+| Live Steam | untouched; clients + Node torn down after smoke |
+
 ## 11. Next phase
 
-1. **Hugo OK’d** Node 22 + two-client smoke (test copy only). Brief: `internal/phase2-node-smoke-brief.md` — ports **42200**/ **42201** (code defaults; README’s 31000/31001 outdated), `npm install` in `D:\coop-test\SDO\server`, launch **copy** `SurrounDead-Win64-Shipping.exe` with `-sdo_*` args (never `steam://run` / live Steam).
-2. Coordinator resumes Windows worker [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48); smoke; write `internal/phase2-node-smoke-report.md`.
-3. Revive: zombie proxies / 0.8.0 name audit after smoke evidence.
+Coordinator asked Hugo what’s next. Candidates from smoke caveats + revive path:
+
+1. Dismiss Barber; confirm free movement + on-screen peer (same smoke setup).
+2. Raise `SDO_TICKET_TTL_MS` / mint-immediately habit; optional per-client Saved isolation.
+3. Revive: zombie proxies / 0.8.0 name audit; combat/vehicles when Hugo OKs a longer session.
+4. Do **not** claim QA `automated` until a scripted harness exists.
 
 ---
 
@@ -339,3 +359,4 @@ Same agent [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). Report: `i
 | 2026-11-06 | Coordinator resumed [Phase 2 Windows workspace](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48) with xmake-build brief (no new placement). Standing by for `internal/phase2-xmake-build-report.md`. |
 | 2026-11-06 | Phase 2b SUCCESS: xmake 3.1.2; `main.dll` built+deployed to copy only (SHA 6E83B911…). Folded into §10b + PR. Waiting Hugo OK for Node server + two-client smoke. |
 | 2026-11-06 | Hugo: **OK** Node dedicated server + two-client smoke (test copy only). Wrote `internal/phase2-node-smoke-brief.md` (ports 42200/42201, npm, copy exe only — no live Steam). Asking coordinator to resume [bc-f4712bbb…](bc-f4712bbb-71f8-5814-bc23-4ea1fd46bb48). |
+| 2026-11-06 | Phase 2c SUCCESS (manual smoke, not automated): Node 25.2.1; both copy clients auth+session; health `players:2`; clothing equip sync; FirstJoin Barber only; ContinueGame used real LOCALAPPDATA Saved (backup exists); live Steam untouched; torn down. Folded into §10c + PR. Coordinator asking Hugo what’s next. No Windows placement from this agent. |
