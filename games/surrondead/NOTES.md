@@ -359,7 +359,7 @@ Hugo priority: zombie visibility toward “perfect co-op” feel, **plus players
 | Feature | How SDO intends it | Status on 5.6 / our copy |
 | --- | --- | --- |
 | **Drop items to each other** | Client `ItemDropRequest` → host creates `GroundItem`, broadcasts `EntitySpawn`+`EntityState` (persisted). Peer `ItemPickupRequest` despawns. TTL prune + max-count. Dropper’s local native pickup **claimed** (`find_and_claim_native_pickup`) so they don’t see a duplicate. Host trusts client itemId (equipped drops won’t match inventory bookkeeping). | Author: worked on **5.3**; “not yet re-verified on 5.6.” **We have not smoke-tested.** |
-| **Place / build objects** | Client `InteractionRequest` BUILD → host validates distance/itemId → `PlacedStructure` entity; clients spawn via `BuildActorClass` on the DataAsset. | Server path exists. Client **hook broken on 5.6**: `SpawnBuild`/`Svr_SpawnBuild` still looked up on the **pawn**, live API is on `BuildingComponent` → placement **will not fire** (README Broken + Contributing #3). |
+| **Place / build objects** | Client `InteractionRequest` BUILD → host validates distance/itemId → `PlacedStructure` entity; clients spawn via `BuildActorClass` on the DataAsset. | **README still says broken** (pawn lookup). **Code @ `5d9a73d` already resolves** `SpawnBuild`/`Svr_SpawnBuild` off `BuildingComponent` via `obj_prop` (`mod.cpp` ~9254–9280) and author notes “NOT YET LIVE-VERIFIED.” Treat as **needs live placement smoke**, not a known missing rehome — README Contributing #3 may be stale. |
 | **Cars / vehicles** | Once per session host `_broadcastVehicles()` (~56 zones from world-data); clients **adopt** nearest already-loaded level vehicle (`find_native_vehicle_near`) — deliberately no spawn (avoids zombie crash class). Health default 100. | Code complete; author **never live-tested**. Our 2d: broadcast seen, enter **not tried**. |
 
 Full ranked wanted list: store `internal/perfect-coop-wanted-backlog.md`.
@@ -410,7 +410,7 @@ Hugo: keep improving (~10h AFK). Cloud implemented smallest levers as AGPL patch
 
 ## 13. Next phase
 
-Standing by for `internal/phase3-zombie-proxy-build-report.md` (bc-f4712bbb; mid-run also checking map markers). Fold report → iterate next backlog item. No Windows self-placement. Do **not** claim QA `automated` or “perfect”.
+Standing by for `internal/phase3-zombie-proxy-build-report.md` (bc-f4712bbb; also map markers). Then: fold → Phase 3b drop/pickup brief ready (`internal/phase3b-drop-pickup-brief.md`) → map-marker spike if FAIL (`internal/map-marker-research-notes.md`) → building live smoke (code may already be fixed). No Windows self-placement. Do **not** claim QA `automated` or “perfect”.
 
 ---
 
@@ -440,3 +440,4 @@ Standing by for `internal/phase3-zombie-proxy-build-report.md` (bc-f4712bbb; mid
 | 2026-11-06 | Hugo: also want players visible **on the map**. Noted as wanted/unknown in NOTES + howto + Phase 3a checklist (not verified in 2d). |
 | 2026-11-06 | Hugo asks how cars / placing / dropping work. Documented from SDO README+code: drops=shared GroundItems (5.3 ok, 5.6 unverified); build=broken on 5.6; vehicles=code never live-tested. |
 | 2026-11-06 | Coordinator pinged 3a for map markers. Expanded wanted backlog (`internal/perfect-coop-wanted-backlog.md` + NOTES ranked list) from host-agent protocol details while waiting on Phase 3a report. |
+| 2026-11-06 | Hugo: keep iterating while AFK. Corrected building status (README vs `mod.cpp` BuildingComponent hook already present, unverified). Drafted `phase3b-drop-pickup-brief.md` + `map-marker-research-notes.md`. Still waiting Phase 3a report. |

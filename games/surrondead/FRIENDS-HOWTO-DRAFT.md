@@ -36,7 +36,7 @@ Unofficial co-op via [SDO](https://github.com/DatGuySnowfox/SDO) (AGPL): UE4SS C
 | | Design | Honest status |
 | --- | --- | --- |
 | **Dropping items** | Dedicated server stores ground loot as shared `GroundItem`s; both clients see/pick up the same drop (TTL + budget). | Worked on older 5.3 builds per author; **not re-proven** on our 0.8.0 smoke. |
-| **Placing / building** | Server tracks placed pieces; clients spawn structure actors. | **Broken on 5.6** — build hooks still point at the old pawn API (`SpawnBuild` moved). Don’t expect bases to sync until that is fixed. |
+| **Placing / building** | Server tracks placed pieces; clients spawn structure actors. | Hook may already target `BuildingComponent` in current SDO source, but **not live-proven** — don’t rely on bases syncing until we smoke it. |
 | **Cars** | Map already has vehicle actors; SDO tries to “claim” them and sync use instead of spawning duplicates. | Code exists; **never successfully live-tested** (author + our short 2d pass). Treat as experimental/unknown. |
 | **Map markers** | Wanted. | **Unknown** — check next two-client session. |
 
