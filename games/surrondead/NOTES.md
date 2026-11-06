@@ -383,7 +383,7 @@ Ranked hypotheses A–E in the plan (FindObject type, dangling actor, AI lifetim
 4. Cap / near-player spawn before full flood.  
 5. Re-enable Roamer-only under flag with heavy logging — **ask coordinator before Windows build/deploy**.  
 6. Then Dog/Boss, combat, server relevance.  
-7. Ask Hugo only if blocked on **upstream PR vs hugge01 fork**.
+7. Hugo blanket OK (2026-11-06): no further owner asks — default to AGPL patches in-hub + apply on `D:\coop-test\SDO`; upstream PR when proven.
 
 ### Other SDO-documented sync gaps (not invented)
 
@@ -410,7 +410,14 @@ Hugo: keep improving (~10h AFK). Cloud implemented smallest levers as AGPL patch
 
 ## 13. Next phase
 
-Standing by for `internal/phase3-zombie-proxy-build-report.md` (bc-f4712bbb; also map markers). Then: fold → Phase 3b drop/pickup brief ready (`internal/phase3b-drop-pickup-brief.md`) → map-marker spike if FAIL (`internal/map-marker-research-notes.md`) → building live smoke (code may already be fixed). No Windows self-placement. Do **not** claim QA `automated` or “perfect”.
+Hugo blanket OK (Project `preferences.md`): no owner asks. Standing by for `internal/phase3-zombie-proxy-build-report.md`. Queued briefs (coordinator resume only, no self-place):
+
+1. 3b drops — `internal/phase3b-drop-pickup-brief.md`
+2. 3c building — `internal/phase3c-building-smoke-brief.md`
+3. 3d vehicles — `internal/phase3d-vehicle-smoke-brief.md`
+4. Map markers — check in 3a; spike notes `internal/map-marker-research-notes.md` if FAIL
+
+Do **not** claim QA `automated` or “perfect”.
 
 ---
 
@@ -441,3 +448,4 @@ Standing by for `internal/phase3-zombie-proxy-build-report.md` (bc-f4712bbb; als
 | 2026-11-06 | Hugo asks how cars / placing / dropping work. Documented from SDO README+code: drops=shared GroundItems (5.3 ok, 5.6 unverified); build=broken on 5.6; vehicles=code never live-tested. |
 | 2026-11-06 | Coordinator pinged 3a for map markers. Expanded wanted backlog (`internal/perfect-coop-wanted-backlog.md` + NOTES ranked list) from host-agent protocol details while waiting on Phase 3a report. |
 | 2026-11-06 | Hugo: keep iterating while AFK. Corrected building status (README vs `mod.cpp` BuildingComponent hook already present, unverified). Drafted `phase3b-drop-pickup-brief.md` + `map-marker-research-notes.md`. Still waiting Phase 3a report. |
+| 2026-11-06 | Hugo: **approve everything / no asking** (chat stops if asked). Autonomous path: patches + Windows via coordinator only. |
