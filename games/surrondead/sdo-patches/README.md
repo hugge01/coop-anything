@@ -1,38 +1,37 @@
 # SDO patches (AGPL-3.0-or-later)
 
 Patches against [DatGuySnowfox/SDO](https://github.com/DatGuySnowfox/SDO) pin
-`5d9a73d2b05b888abf64990eb003b6446abdf0d9` (same as Hugo’s `D:\coop-test\SDO`).
+`5d9a73d2b05b888abf64990eb003b6446abdf0d9` (Hugo’s `D:\coop-test\SDO`).
 
-These are **opt-in zombie proxy improvements** from our revive plan
-(`internal/zombie-visibility-fix-plan.md`). They do **not** ship game assets.
+Hugo blanket OK (2026-11-06): apply/build/retest on **test copy** without further owner asks.
+**Never** live Steam. Prefer upstream PR to DatGuySnowfox once proven.
 
 ## Patches
 
 | File | What |
 | --- | --- |
-| `0001-zombie-proxy-smallest-levers.patch` | Type-check `FindObject` fallback in `resolve_class_by_name`; flag-gate zombie proxies (`enable_zombie_proxies.flag`); clear actor on teleport SEH; cap 12 zombie actors; Roamer-only spawn when enabled |
+| `0001-zombie-proxy-smallest-levers.patch` | Type-check `FindObject` fallback; opt-in `enable_zombie_proxies.flag` (default off); SEH actor clear; max 12 Roamer-only proxies; one-shot `SYNC_DIAG` entity counts |
+| `BUILDING-STATUS.md` | README vs source: BuildingComponent hook already present — no rehome patch until 3c fails |
 
-## Apply on Windows test copy (ask before build)
+## Apply on Windows test copy
 
 ```powershell
 cd D:\coop-test\SDO
-git status   # expect clean @ 5d9a73d
-git apply --check <path-to>\0001-zombie-proxy-smallest-levers.patch
-git apply <path-to>\0001-zombie-proxy-smallest-levers.patch
-# then xmake build + deploy.ps1 into COPY Win64 only — never live Steam
+git rev-parse HEAD   # 5d9a73d…
+git apply --check D:\coop-test\tools\0001-zombie-proxy-smallest-levers.patch
+git apply D:\coop-test\tools\0001-zombie-proxy-smallest-levers.patch
+# VsDevCmd x64; gen_import_lib.ps1 if needed; xmake build
+.\scripts\deploy.ps1 -Win64 "D:\coop-test\SurrounDead\SurrounDead\Binaries\Win64" -SkipBuild
 ```
 
-## Enable at runtime (after deploy)
-
-Default remains **off** (safe). To test:
+## Enable zombie proxies (after deploy)
 
 ```powershell
 New-Item -ItemType File -Force "$env:APPDATA\SDO\enable_zombie_proxies.flag"
 ```
 
-Remove the flag to disable without rebuilding.
+Default remains **off**. Look for `SYNC_DIAG:` in `%APPDATA%\SDO\debug.log` once entities arrive.
 
-## License
+## Resume brief
 
-Derivative of SDO → AGPL-3.0-or-later. If these run on a public gateway, publish the
-modified source (network clause). Prefer upstream PR to DatGuySnowfox/SDO once proven.
+Store: `internal/phase3a-windows-resume-brief.md` (when Windows worker is back).

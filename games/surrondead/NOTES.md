@@ -404,9 +404,10 @@ Detail: `internal/perfect-coop-wanted-backlog.md`.
 
 Hugo: keep improving (~10h AFK). Cloud implemented smallest levers as AGPL patch (no Windows placement from this agent):
 
-- Path: `games/surrondead/sdo-patches/0001-zombie-proxy-smallest-levers.patch` (against SDO `5d9a73d`)
-- Changes: FindObject non-class reject; `enable_zombie_proxies.flag` opt-in (default off); clear actor on teleport SEH; max 12 zombie actors; Roamer-only when enabled
-- Windows brief: `internal/phase3-zombie-proxy-build-brief.md` — apply → xmake → deploy copy → baseline off → flag on retest
+- Path: `games/surrondead/sdo-patches/0001-zombie-proxy-smallest-levers.patch` (against SDO `5d9a73d`; includes SYNC_DIAG)
+- Changes: FindObject non-class reject; `enable_zombie_proxies.flag` opt-in (default off); clear actor on teleport SEH; max 12 Roamer-only; one-shot entity-count `SYNC_DIAG`
+- Building: no rehome patch yet — see `sdo-patches/BUILDING-STATUS.md`
+- Windows briefs: `internal/phase3-zombie-proxy-build-brief.md` + resume `internal/phase3a-windows-resume-brief.md` (machine was offline mid-3a)
 
 ## 13. Next phase
 
@@ -449,3 +450,4 @@ Do **not** claim QA `automated` or “perfect”.
 | 2026-11-06 | Coordinator pinged 3a for map markers. Expanded wanted backlog (`internal/perfect-coop-wanted-backlog.md` + NOTES ranked list) from host-agent protocol details while waiting on Phase 3a report. |
 | 2026-11-06 | Hugo: keep iterating while AFK. Corrected building status (README vs `mod.cpp` BuildingComponent hook already present, unverified). Drafted `phase3b-drop-pickup-brief.md` + `map-marker-research-notes.md`. Still waiting Phase 3a report. |
 | 2026-11-06 | Hugo: **approve everything / no asking** (chat stops if asked). Autonomous path: patches + Windows via coordinator only. |
+| 2026-11-06 | Windows worker offline/asleep mid-3a. Offline: refreshed 0001 (+SYNC_DIAG), BUILDING-STATUS.md, phase3a-windows-resume-brief, 3b–3d briefs already queued. No Hugo asks. |

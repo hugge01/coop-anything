@@ -1,5 +1,5 @@
 diff --git a/src/entity_manager.cpp b/src/entity_manager.cpp
-index 6804669..0fc67cf 100644
+index 6804669..6f6e074 100644
 --- a/src/entity_manager.cpp
 +++ b/src/entity_manager.cpp
 @@ -39,18 +39,39 @@ void EntityManager::init()
@@ -79,7 +79,7 @@ index 6804669..0fc67cf 100644
          }
      }
  }
-@@ -172,28 +196,25 @@ void EntityManager::tick(UWorld* world, AActor* /*local_pawn*/)
+@@ -172,28 +196,47 @@ void EntityManager::tick(UWorld* world, AActor* /*local_pawn*/)
  
      std::lock_guard<std::mutex> lk(g_state().entityMtx);
  
@@ -108,6 +108,28 @@ index 6804669..0fc67cf 100644
 +        }
 +    }
 +
++    // One-shot SYNC_DIAG for Phase 3b–3d smokes (logging only).
++    static bool s_sessionDiagLogged = false;
++    if (!s_sessionDiagLogged && world) {
++        size_t ground = 0, vehicles = 0, structures = 0, zombiesTracked = 0;
++        for (const auto& [id, entity] : g_state().entities) {
++            if (entity.kind == EntityKind::GroundItem) ++ground;
++            else if (entity.kind == EntityKind::Vehicle) ++vehicles;
++            else if (entity.kind == EntityKind::PlacedStructure) ++structures;
++            else if (entity.kind == EntityKind::Zombie) ++zombiesTracked;
++        }
++        if (vehicles > 0 || ground > 0 || zombiesTracked > 0 || structures > 0) {
++            s_sessionDiagLogged = true;
++            debug_log(
++                "SYNC_DIAG: zombieProxies=" + std::string(zombie_proxies_enabled() ? "on" : "off") +
++                " zombieActors=" + std::to_string(zombieActors) +
++                " zombiesTracked=" + std::to_string(zombiesTracked) +
++                " vehicles=" + std::to_string(vehicles) +
++                " groundItems=" + std::to_string(ground) +
++                " structures=" + std::to_string(structures));
++        }
++    }
++
      const uint64_t now = now_micros();
      for (auto& [id, entity] : g_state().entities) {
 -        if (entity.kind == EntityKind::Zombie) continue;
@@ -121,7 +143,7 @@ index 6804669..0fc67cf 100644
          }
      }
  }
-@@ -509,10 +530,22 @@ static UClass* resolve_zombie_archetype_class(const std::string& archetype)
+@@ -509,10 +552,22 @@ static UClass* resolve_zombie_archetype_class(const std::string& archetype)
  // mid-session) to catch the actual fault with full stack context.
  static AActor* spawn_zombie_actor(UWorld* world, const WorldEntity& entity)
  {
@@ -148,7 +170,7 @@ index 6804669..0fc67cf 100644
      UClass* cls = resolve_zombie_archetype_class(entity.itemId);
      if (!cls) {
          debug_log("spawn_zombie_actor: could not resolve class for archetype=" + entity.itemId);
-@@ -525,12 +558,13 @@ static AActor* spawn_zombie_actor(UWorld* world, const WorldEntity& entity)
+@@ -525,12 +580,13 @@ static AActor* spawn_zombie_actor(UWorld* world, const WorldEntity& entity)
          return nullptr;
      }
      actor->SetActorHiddenInGame(false);
