@@ -51,7 +51,7 @@ Sources: Steam store; SteamDB app + patchnotes 26467602; Hugo’s answers; SDO R
 
 - Before this work: no `DIRECTORY.md` / `data/directory.yaml` / `games/surrondead` entry.
 - Claim #334 on `cranebeaker/coop-anything`.
-- hugge01 fork: issues disabled; work on branch `game/surrondead`.
+- hugge01 fork: issues disabled; work on branch `cursor/game-surrondead-7487` (playbook slug `games/surrondead/`).
 
 ---
 
@@ -297,6 +297,6 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 
 | When | What |
 |---|---|
-| 2026-11-06 | Phase 0 triage; branch `game/surrondead`; claim #334. |
+| 2026-11-06 | Phase 0 triage; claim #334; initial branch later renamed to `cursor/game-surrondead-7487`. |
 | 2026-11-06 | Hugo answers Phase 0 Qs (path, test copy OK, soft draft PR, agent picks net). |
 | 2026-11-06 | Phase 1: SDO README/bug list, UE4SS digest pins, FullerK55/Koopz/Seebrasse deep read, networking decision = SDO dedicated, directory + README, draft PR. No downloads, no install touch. |
