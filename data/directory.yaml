@@ -10728,6 +10728,76 @@
   - https://github.com/carlgoodtoseeyu/superflightmp/releases/tag/v0.2.0
   checked: '2026-10-30'
   made_with_coop_anything: true
+- game: SurrounDead
+  year: 2022
+  engine: Unreal Engine 5
+  project: SDO (SurrounDead Online)
+  url: https://github.com/DatGuySnowfox/SDO
+  other_urls:
+  - https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/
+  kind: mod
+  status: alpha
+  coop_scope:
+    players_visible: 'yes'
+    story: unknown
+    enemies: partial
+    world_state: partial
+    items: partial
+  players: '2+'
+  networking: dedicated-server
+  open_source: 'yes'
+  last_activity: 2026-09
+  qa: none
+  notes: >-
+    AGPL-3.0-or-later UE4SS C++ client mod plus a Node.js dedicated server (SQLite world state).
+    Author mid-port to UE 5.6; last push 2026-09-27. Coop-anything revive on Hugo Steam build
+    26471822 (test copy only): SDO @ 5d9a73d built/deployed. Manual two-client smokes 2026-11-06
+    (Node 25.2.1, ports 42200/42201): auth+session, health players:2, clothing equip, Barber
+    dismissed + free WASD, mutual visibility (Hugo-confirmed). Zombies invisible as expected
+    (spawn_zombie_actor disabled). Combat partial in safezone; vehicles not tried. LOCALAPPDATA
+    Saved isolation attempt failed (real profile still written). QA stays none (not automated).
+    Needs UE4SS experimental-latest, Node 22+, xmake/MSVC. No GitHub releases. Official co-op
+    still planned (Patch 0.8.0, 2026-11-05). Write-up games/surrondead. Claim #334.
+  sources:
+  - https://github.com/DatGuySnowfox/SDO
+  - https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/
+  - https://store.steampowered.com/app/1645820/SurrounDead/
+  - https://steamdb.info/patchnotes/26467602/
+  checked: '2026-11-06'
+- game: SurrounDead
+  year: 2022
+  engine: Unreal Engine 5
+  project: SurroundeadMP (SDMP)
+  url: https://github.com/FullerK55/SurroundeadMP
+  other_urls:
+  - https://github.com/Koopz8/SurrounDeadMP
+  - https://github.com/Seebrasse345/SurrounDeadMP
+  kind: mod
+  status: prototype
+  coop_scope:
+    players_visible: 'yes'
+    story: unknown
+    enemies: unknown
+    world_state: unknown
+    items: unknown
+  players: '2'
+  networking: vpn-needed
+  open_source: unknown
+  last_activity: 2026-10
+  qa: none
+  notes: >-
+    UE4SS Lua listen-server experiment on leftover SteamSockets/IpNetDriver. Author NOTES
+    (2026-10-25/26) report two-PC join over Radmin on UE 5.3 with spawn/possess, partial
+    death/respawn and clothing, and open movement snap issues; SteamSockets Unreal handshake
+    stalls so the packaged path uses -nosteam + IP/VPN. No license stated; the test launcher
+    downloads the GitHub master zip on every launch - do not treat as a pinned install.
+    Related thinner attempts: Koopz8/SurrounDeadMP (recon only) and Seebrasse345/SurrounDeadMP
+    (older spawn fix). Not the coop-anything revive target (that is SDO). See games/surrondead.
+  sources:
+  - https://github.com/FullerK55/SurroundeadMP
+  - https://github.com/Koopz8/SurrounDeadMP
+  - https://github.com/Seebrasse345/SurrounDeadMP
+  checked: '2026-11-06'
 - game: BLACK SOULS II
   year: 2018
   engine: RPG Maker VX Ace
