@@ -300,3 +300,4 @@ Playbook family: UE4/5 + UE4SS (`playbook/engine-families.md`).
 | 2026-11-06 | Phase 0 triage; claim #334; initial branch later renamed to `cursor/game-surrondead-7487`. |
 | 2026-11-06 | Hugo answers Phase 0 Qs (path, test copy OK, soft draft PR, agent picks net). |
 | 2026-11-06 | Phase 1: SDO README/bug list, UE4SS digest pins, FullerK55/Koopz/Seebrasse deep read, networking decision = SDO dedicated, directory + README, draft PR. No downloads, no install touch. |
+| 2026-11-06 | Hugo asked agent to read install from his PC; clarified he is on **Windows**. Only connected self-hosted worker is **Hugo's MacBook Pro** (darwin) — cannot see `C:\Program Files (x86)\Steam\...`. Blocked until a Windows worker is online or he pastes §7 output. |
