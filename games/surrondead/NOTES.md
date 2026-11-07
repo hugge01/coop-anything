@@ -479,3 +479,4 @@ Do **not** claim QA `automated` or “perfect”.
 | 2026-11-07 | Hugo **paused automation** to discuss SurrounSync. Unsubscribed phase3a/phase3e report polls; no resume asks. Stand by for discussion notes only. |
 | 2026-11-07 | Phase 3e report: install 1.1.0 on separate tree OK; smoke ABORTED (Hugo shut down). Live Steam already had SurrounSync (pre-existing). |
 | 2026-11-07 | Hugo: author **written OK to modify**. Align check: newest still **v1.1.0**. Patches `0001` (join FPS absorb + vehicle learn + soft autosave/weather). Fork docs on hugge01/SurrounSync `patch/v1.1.0-remaining`. Retest brief `phase3f-…` — **ask coordinator to place Windows**. |
+| 2026-11-07 | Coordinator placed SurrounSync **Phase 3f** patch-retest worker on Hugo Windows. Standing by for `internal/phase3f-surrounsync-patch-retest-report.md`. |
