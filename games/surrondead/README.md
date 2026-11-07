@@ -4,22 +4,23 @@
 |---|---|
 | Engine | Unreal Engine 5.6 (0.8.x; was 5.3) |
 | Versions tested | Hugo Steam build **26471822** (Win10 Pro); test copy + pinned UE4SS; SDO @ `5d9a73d` (`main.dll` SHA `6E83B911…8854`); Node **25.2.1**; manual two-client smokes on copy (ports 42200/42201), including deeper in-world pass |
-| Projects | [SDO (SurrounDead Online)](https://github.com/DatGuySnowfox/SDO) (directory primary); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
+| Projects | [SDO](https://github.com/DatGuySnowfox/SDO) (AGPL revive track); [SurrounSync](https://github.com/SYMPLYSCK/SurrounSync) (Steam P2P, source-available proprietary — evaluate on test copy); listen-server experiments [SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP), [Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP), [Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP) |
 | QA level | none (manual two-client smokes only — **not** automated) |
-| Last updated | 2026-11-06 |
+| Last updated | 2026-11-07 |
 
 ## Where things stand
 
-Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). Furthest open fan project: **SDO** (UE4SS C++ + Node dedicated). On Hugo’s **26471822** test copy, two clients auth, latch session, move past Barber, and **see each other in world** (Hugo-confirmed). Clothing equip sync works. Owner also wants peers **on the map** (not verified yet). Zombies stay invisible (SDO disables client zombie proxies — confirmed). Combat/vehicles still weak/untested. Path: **revive SDO**, not a third architecture.
+Friends cannot play official co-op today (Steam lists single-player; co-op is still a planned future feature). **Friends-soon primary:** black-box **SurrounSync** 1.1.0 on a **separate** test copy (Steam P2P; author claims zombies/map/cars/building) — not installed yet; coordinator places Phase 3e before any download; never mix with SDO on the same Win64. **Secondary AGPL:** revive **SDO** on `D:\coop-test` — mutual visibility already smoked; zombies still invisible; Phase 3a may continue as research. SurrounSync LICENSE is all-rights-reserved (read OK, no fork into our patches).
 
 ## Existing work
 
 - **[SDO](https://github.com/DatGuySnowfox/SDO)** (AGPL-3.0-or-later, DatGuySnowfox) — host-authority dedicated server. Last push 2026-09-27 (mid-port to UE 5.6 after experimental 0.8). No GitHub releases; build from source. Bug list is the README status tables. [Reddit announcement](https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/) (2026-09-24).
+- **[SurrounSync](https://github.com/SYMPLYSCK/SurrounSync)** (source-available proprietary, SYMPLYSCK) — UE4SS Lua + Steam P2P bridge; installer releases through **v1.1.0** (2026-11-07) for game **0.8.0**. Author claims full zombie/loot/vehicle/building sync + minimap. Pin installer SHA before install. Distinct (per Hugo/Discord mods) from the Sep malware scare; unsigned setup trips Defender. Compare: store `internal/surrounsync-vs-sdo.md`.
 - **[SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP)** — UE4SS Lua listen-server on leftover SteamSockets/IpNetDriver. Reached two-PC join over Radmin on **UE 5.3** (2026-10-26); SteamSockets handshake stalls; no license stated; launcher auto-fetches GitHub zip. Research value high; not the shipping target for 0.8.0.
 - **[Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP)** — recon only (“nothing playable yet”), documents SteamSockets + Jigsaw replication.
 - **[Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP)** (+ MP-Fix) — older UE5.3 spawn/possession fixes for listen join.
 - **Official** — planned multiplayer/co-op; not shipping as of Patch 0.8.0 (2026-11-05).
-- Security: official Discord warned about a separate circulated “co-op mod” as malware (~2026-09). Prefer AGPL SDO from GitHub with pinned hashes only.
+- Security: official Discord warned about a separate circulated “co-op mod” as malware (~2026-09). Prefer pinned hashes; SurrounSync installer SHA for v1.1.0 recorded in NOTES.
 
 Working notes: [NOTES.md](NOTES.md). Claim: [cranebeaker/coop-anything#334](https://github.com/cranebeaker/coop-anything/issues/334).
 
@@ -52,6 +53,6 @@ Invisible zombies on clients (`spawn_zombie_actor` returns null — expected unt
 
 ## Next steps
 
-1. Apply `games/surrondead/sdo-patches/0001-zombie-proxy-smallest-levers.patch` on the test-copy SDO tree, rebuild/deploy, retest with `enable_zombie_proxies.flag` (brief: store `internal/phase3-zombie-proxy-build-brief.md`).
-2. If Roamer proxies stable: Dog/Boss, then combat; else keep flag off and capture crash evidence.
-3. Broader gaps per SDO docs: vehicles, building hook, server inventory restore; friend howto after a stable pass.
+1. Coordinator places Phase 3e: SurrounSync **v1.1.0** on **separate** test copy (`D:\coop-test-surrounsync`); pin SHA in NOTES; never live Steam; never mix with SDO tree.
+2. If 3e PASS → Hugo friends play path; document bugs only (no forking SurrounSync).
+3. SDO Phase 3a–3d continue on `D:\coop-test` as AGPL secondary if still useful.

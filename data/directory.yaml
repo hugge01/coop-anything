@@ -10756,14 +10756,56 @@
     dismissed + free WASD, mutual visibility (Hugo-confirmed). Zombies invisible as expected
     (spawn_zombie_actor disabled). Combat partial in safezone; vehicles not tried. LOCALAPPDATA
     Saved isolation attempt failed (real profile still written). QA stays none (not automated).
-    Needs UE4SS experimental-latest, Node 22+, xmake/MSVC. No GitHub releases. Official co-op
-    still planned (Patch 0.8.0, 2026-11-05). Write-up games/surrondead. Claim #334.
+    Dual-track with SurrounSync (Steam P2P, proprietary source-available): SurrounSync is the
+    friends-soon play candidate on a separate test copy; SDO remains the AGPL revive / research
+    target. Needs UE4SS experimental-latest, Node 22+, xmake/MSVC. No GitHub releases. Official
+    co-op still planned (Patch 0.8.0, 2026-11-05). Write-up games/surrondead. Claim #334.
   sources:
   - https://github.com/DatGuySnowfox/SDO
   - https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/
   - https://store.steampowered.com/app/1645820/SurrounDead/
   - https://steamdb.info/patchnotes/26467602/
-  checked: '2026-11-06'
+  checked: '2026-11-07'
+  made_with_coop_anything: true
+- game: SurrounDead
+  year: 2022
+  engine: Unreal Engine 5
+  project: SurrounSync
+  url: https://github.com/SYMPLYSCK/SurrounSync
+  other_urls:
+  - https://github.com/SYMPLYSCK/SurrounSync/releases/tag/v1.1.0
+  kind: mod
+  status: alpha
+  coop_scope:
+    players_visible: 'yes'
+    story: 'no'
+    enemies: 'yes'
+    world_state: 'yes'
+    items: 'yes'
+  players: '2-4'
+  networking: steam-relay
+  open_source: partial
+  last_activity: 2026-11
+  qa: none
+  notes: >-
+    Source-available proprietary (© 2026 Jayden Munroe / SYMPLYSCK): play and read OK; no
+    copy/modify/redistribute without written permission. UE4SS Lua mod + SurrounSyncBridge.exe
+    Steam P2P (game steam_api64.dll); optional Realms on Cloudflare Worker. Installer
+    SurrounSyncSetup.exe; v1.1.0 (2026-11-07) for SurrounDead 0.8.0 (normal or Experimental).
+    Published installer SHA-256 859C78C64159BEAD03B85847FB6ECE6EF2FB750FCEACD3FA90C579B0DA2156A3.
+    Author claims zombies/AI copies, loot, building, cars, minimap/player map dots, voice.
+    Traders/quests not synced. Unsigned installer trips Defender (expected). Distinct from Sep
+    2026 malware scare per owner/Discord-mod note; not independently re-verified here. Reddit
+    release thread cited by owner (Primary-Memory-661) but not re-fetched (API blocked). Not
+    installed yet; eval planned on a SEPARATE test copy from SDO (never mix Win64). See
+    games/surrondead. Claim #334.
+  sources:
+  - https://github.com/SYMPLYSCK/SurrounSync
+  - https://github.com/SYMPLYSCK/SurrounSync/blob/master/LICENSE
+  - https://github.com/SYMPLYSCK/SurrounSync/blob/master/docs/ARCHITECTURE.md
+  - https://github.com/SYMPLYSCK/SurrounSync/releases/tag/v1.1.0
+  - https://store.steampowered.com/app/1645820/SurrounDead/
+  checked: '2026-11-07'
 - game: SurrounDead
   year: 2022
   engine: Unreal Engine 5

@@ -147,28 +147,45 @@ UE4SS installer + Lua/Blueprint spawn fixes for listen join (camera-only clients
 
 “Nothing playable yet” (2026-10-23). Findings: SteamSockets configured; replication census; no session UI. Good corroboration of leftover netcode; not a product.
 
+### E. SYMPLYSCK/SurrounSync — Steam P2P co-op (2026-11-07 research)
+
+| | |
+|---|---|
+| URL | https://github.com/SYMPLYSCK/SurrounSync |
+| License | **Source-available proprietary** (© 2026 Jayden Munroe) — play + read OK; **no copy/modify/redistribute/fork** without written permission. UE4SS stays MIT. |
+| Author | SYMPLYSCK / Reddit OP cited by Hugo: Primary-Memory-661 |
+| Latest release | **v1.1.0** (2026-11-07); installer `SurrounSyncSetup.exe` |
+| Installer SHA-256 (published) | `859C78C64159BEAD03B85847FB6ECE6EF2FB750FCEACD3FA90C579B0DA2156A3` |
+| Game version | **0.8.0 Pandemic** — normal Steam branch **or** Experimental; all clients same branch. **0.7.1 previous does not work** |
+| Architecture | Each client stays SP; UE4SS **Lua** syncs state via link files; `SurrounSyncBridge.exe` does **Steam P2P** (game’s `steam_api64.dll`). Host AI authority; guests get zombie/AI copies. Optional **Realms** (Cloudflare Worker + D1/R2). Optional SyncFX (off by default). |
+| Players | Up to **4** per session; Realms up to **16** members |
+
+**Author-claimed sync (README / ARCHITECTURE — not our QA):** players, combat, zombies/AI copies, loot/containers/drops, time/weather/doors/building/cars/airdrops, chat, map pings, minimap + big-map player dots (1.1), voice experimental. Traders/quests **not** synced. Zombies only hear other players’ gunshots/explosions.
+
+**Bugs / pain (labeled):**
+
+- **Author release notes** (1.0–1.1 *claim* fixes): crawler visuals, double-hit swings, storage put-ins lost, 1-damage guns, building duplicates/move desync, car copies with 3–4 players, long-session memory leak (~2.6 GB / half-second frames), autosave/join freezes (older 0.14.x era).
+- **Hugo / Reddit “Multiplayer Mod RELEASED!” themes** (thread body **not** re-fetched — Reddit API blocked from this environment): zombie visibility/types, infestations, loot/drops, autosave lag, vehicles, building desync, FPS. Discord mods (per Hugo): public code, **distinct from the Sep malware scare**; unsigned installer trips Defender.
+
+**Compare write-up:** store `internal/surrounsync-vs-sdo.md`. **Eval brief (no download until coordinator places):** `internal/phase3e-surrounsync-eval-brief.md`.
+
 ### Noise / security
 
-- Official Discord warning (~2026-09-06, quoted on Reddit) about a circulated “SurrounDead Co-op Mod” as malware / paid scam. **Not** the AGPL SDO GitHub. Still: pin hashes, no unread installers, no auto-updating launchers from random zips.
+- Official Discord warning (~2026-09-06, quoted on Reddit) about a circulated “SurrounDead Co-op Mod” as malware / paid scam. **Not** the AGPL SDO GitHub. Hugo: Discord mods treat **SurrounSync** as distinct + public-source. Still: pin hashes, unsigned installer → Defender expected, no unread installers, no auto-updating launchers from random zips.
 - Cheat-named repos and icon packs ignored.
 
 ---
 
 ## 5. Networking track decision (evidence)
 
-**Primary: revive SDO’s dedicated Node.js host-authority server + UE4SS C++ client.**
+**Updated 2026-11-07 — dual-track, SurrounSync preferred for friends-soon (Hugo blanket OK, no ask):**
 
-Reasons:
+1. **Primary “play with friends soon”:** black-box **SurrounSync 1.1.0** on a **SEPARATE** test copy (e.g. `D:\coop-test-surrounsync`). Never live Steam. **Never mix** SurrounSync + SDO on the same Win64 tree. Pin installer SHA above. Brief: `internal/phase3e-surrounsync-eval-brief.md`. **Do not download until coordinator places Windows.**
+2. **Secondary AGPL research:** keep SDO Phase 3a+ on `D:\coop-test` if still running — zombie opt-in / directory contribution. Do **not** cancel 3a for this research; it is no longer the friends-soon critical path.
+3. **All-rights-reserved:** do not fork SurrounSync into our patches; document bugs only.
+4. SDMP remains research-only (no license; 5.3; zip auto-fetch).
 
-1. **Only project with author-verified two-client sync on UE 5.6** — matches Hugo’s likely 0.8.0 engine. SDMP’s real two-PC sessions were on **5.3**.
-2. **AGPL-3.0-or-later** — clear revive/fork license; network clause understood. SDMP has no stated license.
-3. **World authority already designed** (server owns zombies/time; client spawners suppressed). Survival co-op needs that more than raw pawn replication.
-4. SDMP’s SteamSockets path is **broken** (handshake stall); IP path needs `-nosteam` + VPN and fights Steam launch — worse UX for “friends on Steam.”
-5. SDMP’s every-launch GitHub zip pull is a **security footgun** given the malware scare.
-
-**Secondary (research only, not shipping path):** reuse FullerK55/Koopz findings (level streaming, spawn/possess, game-thread rules, Jigsaw RPCs) when fixing SDO. Do not start a third architecture unless SDO is proven dead on 0.8.0.
-
-**Recommendation to Hugo:** stick to **AGPL SDO + pinned UE4SS** only. Soft; say no if you want SDMP evaluated on a 5.3 Previous-branch copy instead.
+**Why SurrounSync first for friends:** Steam P2P, no port forward, installer, author-claimed visible zombies/map/cars/building on **0.8** — matches Hugo’s goal faster than finishing SDO zombie proxies. **Why keep SDO:** AGPL forkable; our verified mutual-visibility smoke; cannot reuse SurrounSync code.
 
 ---
 
@@ -411,12 +428,14 @@ Hugo: keep improving (~10h AFK). Cloud implemented smallest levers as AGPL patch
 
 ## 13. Next phase
 
-Hugo blanket OK (Project `preferences.md`): no owner asks. Standing by for `internal/phase3-zombie-proxy-build-report.md`. Queued briefs (coordinator resume only, no self-place):
+Hugo blanket OK (Project `preferences.md`): no owner asks. **Friends-soon primary = SurrounSync Phase 3e** on separate test copy after coordinator places brief (no download yet). SDO 3a remains AGPL secondary if Windows still running it.
 
-1. 3b drops — `internal/phase3b-drop-pickup-brief.md`
-2. 3c building — `internal/phase3c-building-smoke-brief.md`
-3. 3d vehicles — `internal/phase3d-vehicle-smoke-brief.md`
-4. Map markers — check in 3a; spike notes `internal/map-marker-research-notes.md` if FAIL
+Queued briefs (coordinator place/resume only, no self-place):
+
+1. **3e SurrounSync eval (primary)** — `internal/phase3e-surrounsync-eval-brief.md` (compare: `internal/surrounsync-vs-sdo.md`)
+2. 3a zombie report fold when it lands — then 3b–3d on SDO tree only if still pursuing AGPL path
+3. 3b drops / 3c building / 3d vehicles — SDO secondary
+4. Map markers — may be moot if SurrounSync minimap PASSes
 
 Do **not** claim QA `automated` or “perfect”.
 
@@ -451,3 +470,4 @@ Do **not** claim QA `automated` or “perfect”.
 | 2026-11-06 | Hugo: keep iterating while AFK. Corrected building status (README vs `mod.cpp` BuildingComponent hook already present, unverified). Drafted `phase3b-drop-pickup-brief.md` + `map-marker-research-notes.md`. Still waiting Phase 3a report. |
 | 2026-11-06 | Hugo: **approve everything / no asking** (chat stops if asked). Autonomous path: patches + Windows via coordinator only. |
 | 2026-11-06 | Windows worker offline/asleep mid-3a. Offline: refreshed 0001 (+SYNC_DIAG), BUILDING-STATUS.md, phase3a-windows-resume-brief, 3b–3d briefs already queued. No Hugo asks. |
+| 2026-11-07 | Hugo pasted SurrounSync Reddit + README (SYMPLYSCK, v1.1.0). Published-source only (no binary RE; Reddit API blocked). Wrote `internal/surrounsync-vs-sdo.md` + Phase 3e brief. Decision: **SurrounSync SEPARATE test-copy = friends-soon primary**; SDO 3a = AGPL secondary; never mix Win64 installs; no download until coordinator places. Directory + NOTES/README/PR updated. |
