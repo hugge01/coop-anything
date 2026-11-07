@@ -1,0 +1,220 @@
+diff --git a/src/entity_manager.cpp b/src/entity_manager.cpp
+index 6804669..6f6e074 100644
+--- a/src/entity_manager.cpp
++++ b/src/entity_manager.cpp
+@@ -39,18 +39,39 @@ void EntityManager::init()
+     initialized_ = true;
+ }
+ 
++// Opt-in zombie proxy rendering. Default OFF — matches upstream disable after
++// the 2026-08-14 crash saga. Enable with empty file
++// %APPDATA%\SDO\enable_zombie_proxies.flag or env SDO_ENABLE_ZOMBIE_PROXIES=1
++// (file form preferred; Steam-inherited env is unreliable — see mod.cpp
++// env_flag_set commentary). Cap concurrent zombie actors to limit flood cost.
++static bool zombie_proxies_enabled()
++{
++    static const bool s_on = [] {
++        wchar_t buf[8];
++        const DWORD n = GetEnvironmentVariableW(L"SDO_ENABLE_ZOMBIE_PROXIES", buf, 8);
++        if (n > 0 && n < 8 && buf[0] == L'1') {
++            debug_log("zombie_proxies: ENABLED via SDO_ENABLE_ZOMBIE_PROXIES=1");
++            return true;
++        }
++        wchar_t path[MAX_PATH];
++        const DWORD a = GetEnvironmentVariableW(L"APPDATA", path, MAX_PATH);
++        if (a == 0 || a >= MAX_PATH) return false;
++        const std::wstring flag = std::wstring(path, a) + L"\\SDO\\enable_zombie_proxies.flag";
++        const bool on = GetFileAttributesW(flag.c_str()) != INVALID_FILE_ATTRIBUTES;
++        if (on) debug_log("zombie_proxies: ENABLED via enable_zombie_proxies.flag");
++        return on;
++    }();
++    return s_on;
++}
++
++static constexpr size_t kMaxZombieProxyActors = 12;
++
+ void EntityManager::on_entity_descriptor(const EntityDescriptorData& desc)
+ {
+-    // Zombie proxy rendering is unconditionally disabled right now (see
+-    // spawn_zombie_actor's doc comment) - don't even track these. Tracking-
+-    // but-never-spawning was found live 2026-08-14 to grow g_state().entities
+-    // unboundedly over a session (the server's zombie simulation broadcasts
+-    // continuously; nothing ever removes a "disabled" entry the way a real
+-    // pickup/despawn would), adding cost to every unrelated scan of this map
+-    // (get_nearest_entity, tick()'s own iteration) on top of the wasted
+-    // retry attempts tick() already guards against separately. Remove this
+-    // guard together with re-enabling spawn_zombie_actor, not before.
+-    if (desc.kind == EntityKind::Zombie) return;
++    // When proxies are off, don't track zombies at all (unbounded map growth
++    // when tracking-but-never-spawning — live 2026-08-14). When on, track so
++    // tick()/on_entity_state can spawn and teleport.
++    if (desc.kind == EntityKind::Zombie && !zombie_proxies_enabled()) return;
+ 
+     std::lock_guard<std::mutex> lk(g_state().entityMtx);
+ 
+@@ -86,10 +107,8 @@ void EntityManager::on_entity_descriptor(const EntityDescriptorData& desc)
+ 
+ void EntityManager::on_entity_state(uint64_t entityId, const EntityStateData& st)
+ {
+-    // Same guard as on_entity_descriptor above, for the same reason - state
+-    // can arrive before the descriptor and would otherwise create a
+-    // tracked-forever entry via the "not found, create minimal" branch below.
+-    if (st.kind == EntityKind::Zombie) return;
++    // Same guard as on_entity_descriptor above.
++    if (st.kind == EntityKind::Zombie && !zombie_proxies_enabled()) return;
+ 
+     std::lock_guard<std::mutex> lk(g_state().entityMtx);
+ 
+@@ -147,7 +166,12 @@ void EntityManager::on_entity_state(uint64_t entityId, const EntityStateData& st
+         // update instead.
+         if (!seh_invoke(doTeleport, &ctx)) {
+             debug_log("on_entity_state: SEH caught an exception teleporting zombie eid=" +
+-                      std::to_string(entityId) + " - actor pointer likely stale, dropping this update");
++                      std::to_string(entityId) +
++                      " - actor pointer likely stale, clearing actor for respawn");
++            // Drop the dangling pointer so tick() can attempt a fresh spawn
++            // after lastActorAttemptUs cooldown instead of re-teleporting junk.
++            e.actor = nullptr;
++            e.lastActorAttemptUs = 0;
+         }
+     }
+ }
+@@ -172,28 +196,47 @@ void EntityManager::tick(UWorld* world, AActor* /*local_pawn*/)
+ 
+     std::lock_guard<std::mutex> lk(g_state().entityMtx);
+ 
+-    // Zombie proxy rendering is unconditionally disabled right now
+-    // (spawn_zombie_actor always returns nullptr - see its own doc comment
+-    // for why). Without this skip, every zombie entity a client ever
+-    // receives from the server's ongoing simulation stays in this map
+-    // forever (a "disabled" attempt never succeeds and never gets removed
+-    // the way a picked-up/despawned entity would) and gets retried every
+-    // 2s indefinitely - an unbounded, ever-growing per-tick cost over a
+-    // long session that this project has already been burned by once
+-    // before for a *transient* failure case (see lastActorAttemptUs's own
+-    // doc comment in state.hpp, "caused 1-2 FPS"). Found live 2026-08-14:
+-    // ~7900 retry attempts accumulated over roughly one play session,
+-    // plausibly contributing to a render-thread freeze that needed a force
+-    // -close (game logic/this tick loop kept running per debug.log - the
+-    // freeze was specifically on the render side, consistent with UE5's
+-    // separate game/render threads and a growing per-tick workload here).
++    // Zombie proxies stay skipped unless enable_zombie_proxies.flag is set.
++    // Cap concurrent zombie actors so a full server flood cannot retry-spawn
++    // hundreds of Character AI pawns in one session (cost + crash surface).
++    size_t zombieActors = 0;
++    if (zombie_proxies_enabled()) {
++        for (const auto& [id, entity] : g_state().entities) {
++            if (entity.kind == EntityKind::Zombie && entity.actor) ++zombieActors;
++        }
++    }
++
++    // One-shot SYNC_DIAG for Phase 3b–3d smokes (logging only).
++    static bool s_sessionDiagLogged = false;
++    if (!s_sessionDiagLogged && world) {
++        size_t ground = 0, vehicles = 0, structures = 0, zombiesTracked = 0;
++        for (const auto& [id, entity] : g_state().entities) {
++            if (entity.kind == EntityKind::GroundItem) ++ground;
++            else if (entity.kind == EntityKind::Vehicle) ++vehicles;
++            else if (entity.kind == EntityKind::PlacedStructure) ++structures;
++            else if (entity.kind == EntityKind::Zombie) ++zombiesTracked;
++        }
++        if (vehicles > 0 || ground > 0 || zombiesTracked > 0 || structures > 0) {
++            s_sessionDiagLogged = true;
++            debug_log(
++                "SYNC_DIAG: zombieProxies=" + std::string(zombie_proxies_enabled() ? "on" : "off") +
++                " zombieActors=" + std::to_string(zombieActors) +
++                " zombiesTracked=" + std::to_string(zombiesTracked) +
++                " vehicles=" + std::to_string(vehicles) +
++                " groundItems=" + std::to_string(ground) +
++                " structures=" + std::to_string(structures));
++        }
++    }
++
+     const uint64_t now = now_micros();
+     for (auto& [id, entity] : g_state().entities) {
+-        if (entity.kind == EntityKind::Zombie) continue;
++        if (entity.kind == EntityKind::Zombie && !zombie_proxies_enabled()) continue;
++        if (entity.kind == EntityKind::Zombie && zombieActors >= kMaxZombieProxyActors) continue;
+         if (!entity.actor && entity.hasPosition && world &&
+             now - entity.lastActorAttemptUs >= 2'000'000ULL) {
+             entity.lastActorAttemptUs = now;
+             entity.actor = spawn_entity_actor(world, entity);
++            if (entity.kind == EntityKind::Zombie && entity.actor) ++zombieActors;
+         }
+     }
+ }
+@@ -509,10 +552,22 @@ static UClass* resolve_zombie_archetype_class(const std::string& archetype)
+ // mid-session) to catch the actual fault with full stack context.
+ static AActor* spawn_zombie_actor(UWorld* world, const WorldEntity& entity)
+ {
+-    (void)world;
+-    debug_log("spawn_zombie_actor: disabled pending dedicated debugging, archetype=" + entity.itemId);
+-    return nullptr;
+-#if 0
++    // Still opt-in via zombie_proxies_enabled() (callers also gate). Default
++    // remains off so casual launches match upstream "do not re-enable casually".
++    if (!zombie_proxies_enabled()) {
++        debug_log("spawn_zombie_actor: disabled (no enable_zombie_proxies.flag), archetype=" +
++                  entity.itemId);
++        return nullptr;
++    }
++
++    // First live re-enable: Roamer only. Dog/Boss wait until Roamer is stable
++    // on current game build (reduces class-resolution surface).
++    if (entity.itemId != "BP_Zombie_Roamer") {
++        debug_log("spawn_zombie_actor: skipping non-Roamer archetype=" + entity.itemId +
++                  " (Roamer-only until verified)");
++        return nullptr;
++    }
++
+     UClass* cls = resolve_zombie_archetype_class(entity.itemId);
+     if (!cls) {
+         debug_log("spawn_zombie_actor: could not resolve class for archetype=" + entity.itemId);
+@@ -525,12 +580,13 @@ static AActor* spawn_zombie_actor(UWorld* world, const WorldEntity& entity)
+         return nullptr;
+     }
+     actor->SetActorHiddenInGame(false);
++    // Stop pawn tick agency; AI Controller may still run — SEH+clear on
++    // teleport remains the dangling-pointer backstop (Session 59).
+     actor->SetActorTickEnabled(false);
+ 
+     debug_log("spawn_zombie_actor: spawned archetype=" + entity.itemId +
+               " eid=" + std::to_string(entity.entityId));
+     return actor;
+-#endif
+ }
+ 
+ // spawn_entity_actor: resolve entity.itemId back to its live
+diff --git a/src/proxy_manager.cpp b/src/proxy_manager.cpp
+index f2e632f..2a2c6dd 100644
+--- a/src/proxy_manager.cpp
++++ b/src/proxy_manager.cpp
+@@ -322,8 +322,26 @@ UClass* resolve_class_by_name(const std::wstring& fullPathOrShortName)
+     }
+ 
+     UObject* const kAnyPackage = reinterpret_cast<UObject*>(static_cast<intptr_t>(-1));
+-    if (UObject* direct = UObjectGlobals::FindObject(nullptr, kAnyPackage, fullPathOrShortName.c_str()))
+-        return static_cast<UClass*>(direct);
++    if (UObject* direct = UObjectGlobals::FindObject(nullptr, kAnyPackage, fullPathOrShortName.c_str())) {
++        // Session 59 leading theory: FindObject(Class=nullptr) can match a
++        // non-UClass by path/name; a blind cast then corrupts later spawns.
++        // Accept only objects whose GetFullName identifies a class meta-object.
++        // (UE prefixes: "Class " / "BlueprintGeneratedClass ".)
++        const std::wstring full = direct->GetFullName();
++        const bool looksLikeClass =
++            full.rfind(L"Class ", 0) == 0 ||
++            full.rfind(L"BlueprintGeneratedClass ", 0) == 0;
++        if (!looksLikeClass) {
++            std::string narrowHit(shortName.size(), '\0');
++            for (size_t i = 0; i < shortName.size(); ++i)
++                narrowHit[i] = static_cast<char>(shortName[i] < 128 ? shortName[i] : '?');
++            debug_log("resolve_class_by_name: FindObject hit non-class for " + narrowHit +
++                      " - rejecting (not caching)");
++            // Fall through to failure rather than returning a poisoned pointer.
++        } else {
++            return static_cast<UClass*>(direct);
++        }
++    }
+ 
+     std::string narrow(shortName.size(), '\0');
+     for (size_t i = 0; i < shortName.size(); ++i)
