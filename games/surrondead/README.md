@@ -53,6 +53,6 @@ Invisible zombies on clients (`spawn_zombie_actor` returns null — expected unt
 
 ## Next steps
 
-1. Coordinator places Phase **3f** patch retest on `D:\coop-test-surrounsync` (`internal/phase3f-surrounsync-patch-retest-brief.md`): apply `0001` patch; smoke join FPS / vehicles / autosave / weather / infest.
-2. SDO Phase 3a–3d remain AGPL secondary on `D:\coop-test` if still useful.
+1. Phase **3f** SurrounSync patch retest on `D:\coop-test-surrounsync` (in flight): apply `0001`; smoke join FPS / vehicles / autosave / weather / infest.
+2. **SDO parked** — no 3a/3b resume unless Hugo later wants AGPL hub work.
 3. Never live Steam; never mix SurrounSync + SDO Win64.
