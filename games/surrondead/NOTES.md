@@ -182,14 +182,12 @@ UE4SS installer + Lua/Blueprint spawn fixes for listen join (camera-only clients
 
 ## 5. Networking track decision (evidence)
 
-**Updated 2026-11-07 — dual-track, SurrounSync preferred for friends-soon (Hugo blanket OK, no ask):**
+**Updated 2026-11-07 — SurrounSync is the play path (Hugo: why discuss SDO?):**
 
-1. **Primary “play with friends soon”:** black-box **SurrounSync 1.1.0** on a **SEPARATE** test copy (e.g. `D:\coop-test-surrounsync`). Never live Steam. **Never mix** SurrounSync + SDO on the same Win64 tree. Pin installer SHA above. Brief: `internal/phase3e-surrounsync-eval-brief.md`. **Do not download until coordinator places Windows.**
-2. **Secondary AGPL research:** keep SDO Phase 3a+ on `D:\coop-test` if still running — zombie opt-in / directory contribution. Do **not** cancel 3a for this research; it is no longer the friends-soon critical path.
-3. **ARR + author OK:** modify under attribution on hugge01 fork / hub patch files; do not republish as original; do not merge into AGPL SDO.
-4. SDMP remains research-only (no license; 5.3; zip auto-fetch).
-
-**Why SurrounSync first for friends:** Steam P2P, no port forward, installer, author-claimed visible zombies/map/cars/building on **0.8** — matches Hugo’s goal faster than finishing SDO zombie proxies. **Why keep SDO:** AGPL forkable; our verified mutual-visibility smoke; cannot reuse SurrounSync code.
+1. **Active work = SurrounSync only** for friends-soon: v1.1.0 + hugge01 patches on **separate** test copy (`D:\coop-test-surrounsync`). Never live Steam. Never mix with SDO Win64. Phase 3f retest in flight.
+2. **SDO parked.** It was the AGPL revive before SurrounSync shipped; mutual-visibility smoke is historical. Do **not** resume SDO 3a/3b unless Hugo later wants an AGPL hub contribution. Not the friends path.
+3. **ARR + author OK:** modify SurrounSync under attribution; do not republish as original; do not merge SurrounSync into AGPL SDO.
+4. SDMP remains research-only (ignore for play).
 
 ---
 
