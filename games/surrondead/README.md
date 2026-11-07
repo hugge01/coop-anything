@@ -15,7 +15,7 @@ Friends cannot play official co-op today (Steam lists single-player; co-op is st
 ## Existing work
 
 - **[SDO](https://github.com/DatGuySnowfox/SDO)** (AGPL-3.0-or-later, DatGuySnowfox) — host-authority dedicated server. Last push 2026-09-27 (mid-port to UE 5.6 after experimental 0.8). No GitHub releases; build from source. Bug list is the README status tables. [Reddit announcement](https://www.reddit.com/r/SurrounDead/comments/1wpau62/unofficial_coop_mod_for_surroundead_open_source/) (2026-09-24).
-- **[SurrounSync](https://github.com/SYMPLYSCK/SurrounSync)** (source-available proprietary, SYMPLYSCK) — UE4SS Lua + Steam P2P bridge; installer releases through **v1.1.0** (2026-11-07) for game **0.8.0**. Author claims full zombie/loot/vehicle/building sync + minimap. Pin installer SHA before install. Distinct (per Hugo/Discord mods) from the Sep malware scare; unsigned setup trips Defender. Compare: store `internal/surrounsync-vs-sdo.md`.
+- **[SurrounSync](https://github.com/SYMPLYSCK/SurrounSync)** (ARR; Hugo has **written author OK to modify**) — UE4SS Lua + Steam P2P; **v1.1.0** for game **0.8**. Separate test copy + hugge01 patches (`games/surrondead/surrounsync-patches`, fork branch `patch/v1.1.0-remaining`). Phase 3e install OK / smoke aborted. Compare: `internal/surrounsync-vs-sdo.md`.
 - **[SurroundeadMP / SDMP](https://github.com/FullerK55/SurroundeadMP)** — UE4SS Lua listen-server on leftover SteamSockets/IpNetDriver. Reached two-PC join over Radmin on **UE 5.3** (2026-10-26); SteamSockets handshake stalls; no license stated; launcher auto-fetches GitHub zip. Research value high; not the shipping target for 0.8.0.
 - **[Koopz8/SurrounDeadMP](https://github.com/Koopz8/SurrounDeadMP)** — recon only (“nothing playable yet”), documents SteamSockets + Jigsaw replication.
 - **[Seebrasse345/SurrounDeadMP](https://github.com/Seebrasse345/SurrounDeadMP)** (+ MP-Fix) — older UE5.3 spawn/possession fixes for listen join.
@@ -53,6 +53,6 @@ Invisible zombies on clients (`spawn_zombie_actor` returns null — expected unt
 
 ## Next steps
 
-1. Coordinator places Phase 3e: SurrounSync **v1.1.0** on **separate** test copy (`D:\coop-test-surrounsync`); pin SHA in NOTES; never live Steam; never mix with SDO tree.
-2. If 3e PASS → Hugo friends play path; document bugs only (no forking SurrounSync).
-3. SDO Phase 3a–3d continue on `D:\coop-test` as AGPL secondary if still useful.
+1. Coordinator places Phase **3f** patch retest on `D:\coop-test-surrounsync` (`internal/phase3f-surrounsync-patch-retest-brief.md`): apply `0001` patch; smoke join FPS / vehicles / autosave / weather / infest.
+2. SDO Phase 3a–3d remain AGPL secondary on `D:\coop-test` if still useful.
+3. Never live Steam; never mix SurrounSync + SDO Win64.

@@ -10797,7 +10797,9 @@
     Traders/quests not synced. Unsigned installer trips Defender (expected). Distinct from Sep
     2026 malware scare per owner/Discord-mod note; not independently re-verified here. Reddit
     release thread cited by owner (Primary-Memory-661) but not re-fetched (API blocked). Not
-    installed yet; eval planned on a SEPARATE test copy from SDO (never mix Win64). See
+    installed for play smoke yet (Phase 3e aborted after quiet install). Hugo has written
+    author OK to modify; hugge01 patches on v1.1.0 (join FPS group absorb / soft autosave /
+    weather) in games/surrondead/surrounsync-patches and hugge01/SurrounSync. See
     games/surrondead. Claim #334.
   sources:
   - https://github.com/SYMPLYSCK/SurrounSync

@@ -152,9 +152,10 @@ UE4SS installer + Lua/Blueprint spawn fixes for listen join (camera-only clients
 | | |
 |---|---|
 | URL | https://github.com/SYMPLYSCK/SurrounSync |
-| License | **Source-available proprietary** (© 2026 Jayden Munroe) — play + read OK; **no copy/modify/redistribute/fork** without written permission. UE4SS stays MIT. |
+| License | **Source-available proprietary** (© 2026 Jayden Munroe). Hugo has **written author OK to modify** (2026-11-07) — still ARR; keep attribution; do not republish as own. UE4SS stays MIT. |
 | Author | SYMPLYSCK / Reddit OP cited by Hugo: Primary-Memory-661 |
-| Latest release | **v1.1.0** (2026-11-07); installer `SurrounSyncSetup.exe` |
+| Latest release | **v1.1.0** (2026-11-07) — still newest tag; `master` = `351a1f2`. Installer `SurrounSyncSetup.exe` |
+| hugge01 fork | https://github.com/hugge01/SurrounSync branch `patch/v1.1.0-remaining` (patch + docs; full upstream tree apply locally) |
 | Installer SHA-256 (published) | `859C78C64159BEAD03B85847FB6ECE6EF2FB750FCEACD3FA90C579B0DA2156A3` |
 | Game version | **0.8.0 Pandemic** — normal Steam branch **or** Experimental; all clients same branch. **0.7.1 previous does not work** |
 | Architecture | Each client stays SP; UE4SS **Lua** syncs state via link files; `SurrounSyncBridge.exe` does **Steam P2P** (game’s `steam_api64.dll`). Host AI authority; guests get zombie/AI copies. Optional **Realms** (Cloudflare Worker + D1/R2). Optional SyncFX (off by default). |
@@ -167,7 +168,10 @@ UE4SS installer + Lua/Blueprint spawn fixes for listen join (camera-only clients
 - **Author release notes** (1.0–1.1 *claim* fixes): crawler visuals, double-hit swings, storage put-ins lost, 1-damage guns, building duplicates/move desync, car copies with 3–4 players, long-session memory leak (~2.6 GB / half-second frames), autosave/join freezes (older 0.14.x era).
 - **Hugo / Reddit “Multiplayer Mod RELEASED!” themes** (thread body **not** re-fetched — Reddit API blocked from this environment): zombie visibility/types, infestations, loot/drops, autosave lag, vehicles, building desync, FPS. Discord mods (per Hugo): public code, **distinct from the Sep malware scare**; unsigned installer trips Defender.
 
-**Compare write-up:** store `internal/surrounsync-vs-sdo.md`. **Eval brief (no download until coordinator places):** `internal/phase3e-surrounsync-eval-brief.md`.
+**Compare / align:** `internal/surrounsync-vs-sdo.md`, `internal/surrounsync-release-align.md`.  
+**Phase 3e:** install OK on `D:\coop-test-surrounsync`, smoke **ABORTED** (Hugo shut down) — `internal/phase3e-surrounsync-eval-report.md`.  
+**hugge01 patches (v1.1.0 base, skip 1.1-claimed fixes):** `games/surrondead/surrounsync-patches/0001-…` — util group absorb + vehicles learn types (join FPS / vehicle desync lever); soft autosave interval 150 s; soft weather JUMP_CONFIRM 2.5. **Not patched without smoke:** infest residual, loot edges, vehicle launch.  
+**Retest brief (ask coordinator to place):** `internal/phase3f-surrounsync-patch-retest-brief.md`.
 
 ### Noise / security
 
@@ -182,7 +186,7 @@ UE4SS installer + Lua/Blueprint spawn fixes for listen join (camera-only clients
 
 1. **Primary “play with friends soon”:** black-box **SurrounSync 1.1.0** on a **SEPARATE** test copy (e.g. `D:\coop-test-surrounsync`). Never live Steam. **Never mix** SurrounSync + SDO on the same Win64 tree. Pin installer SHA above. Brief: `internal/phase3e-surrounsync-eval-brief.md`. **Do not download until coordinator places Windows.**
 2. **Secondary AGPL research:** keep SDO Phase 3a+ on `D:\coop-test` if still running — zombie opt-in / directory contribution. Do **not** cancel 3a for this research; it is no longer the friends-soon critical path.
-3. **All-rights-reserved:** do not fork SurrounSync into our patches; document bugs only.
+3. **ARR + author OK:** modify under attribution on hugge01 fork / hub patch files; do not republish as original; do not merge into AGPL SDO.
 4. SDMP remains research-only (no license; 5.3; zip auto-fetch).
 
 **Why SurrounSync first for friends:** Steam P2P, no port forward, installer, author-claimed visible zombies/map/cars/building on **0.8** — matches Hugo’s goal faster than finishing SDO zombie proxies. **Why keep SDO:** AGPL forkable; our verified mutual-visibility smoke; cannot reuse SurrounSync code.
@@ -473,3 +477,5 @@ Do **not** claim QA `automated` or “perfect”.
 | 2026-11-07 | Hugo pasted SurrounSync Reddit + README (SYMPLYSCK, v1.1.0). Published-source only (no binary RE; Reddit API blocked). Wrote `internal/surrounsync-vs-sdo.md` + Phase 3e brief. Decision: **SurrounSync SEPARATE test-copy = friends-soon primary**; SDO 3a = AGPL secondary; never mix Win64 installs; no download until coordinator places. Directory + NOTES/README/PR updated. |
 | 2026-11-07 | Coordinator placed **new** SurrounSync eval worker on Hugo Windows for Phase 3e brief. Standing by for `internal/phase3e-surrounsync-eval-report.md`. SDO 3a on bc-f4712bbb remains secondary. No self-place. |
 | 2026-11-07 | Hugo **paused automation** to discuss SurrounSync. Unsubscribed phase3a/phase3e report polls; no resume asks. Stand by for discussion notes only. |
+| 2026-11-07 | Phase 3e report: install 1.1.0 on separate tree OK; smoke ABORTED (Hugo shut down). Live Steam already had SurrounSync (pre-existing). |
+| 2026-11-07 | Hugo: author **written OK to modify**. Align check: newest still **v1.1.0**. Patches `0001` (join FPS absorb + vehicle learn + soft autosave/weather). Fork docs on hugge01/SurrounSync `patch/v1.1.0-remaining`. Retest brief `phase3f-…` — **ask coordinator to place Windows**. |

@@ -1,0 +1,105 @@
+diff --git a/mod/SurrounSync/Scripts/mirror/config.lua b/mod/SurrounSync/Scripts/mirror/config.lua
+index 2a5898d..2cd0f2f 100644
+--- a/mod/SurrounSync/Scripts/mirror/config.lua
++++ b/mod/SurrounSync/Scripts/mirror/config.lua
+@@ -126,7 +126,8 @@ local config = {
+         backups_kept = 10,             -- per save, plus the first one (never deleted)
+         checkpoints = true,            -- save shortly after items change hands between players
+         checkpoint_delay = 10.0,
+-        checkpoint_min_interval = 90.0, -- any save (also the game's autosave) restarts this
++        -- hugge01/v1.1.0: 90 -> 150 soft lever for autosave/ghost hitch (Reddit); override in mirror_settings.txt
++        checkpoint_min_interval = 150.0, -- any save (also the game's autosave) restarts this
+         host_gone_countdown = 30,      -- guest goes home this long after the host's game closes
+         peer_gone_after = 15,
+         file_link_gone_after = 45,
+diff --git a/mod/SurrounSync/Scripts/mirror/util.lua b/mod/SurrounSync/Scripts/mirror/util.lua
+index 565e8f8..1139974 100644
+--- a/mod/SurrounSync/Scripts/mirror/util.lua
++++ b/mod/SurrounSync/Scripts/mirror/util.lua
+@@ -556,6 +556,10 @@ function util.instance_group(parent, members, parent_too)
+     for _, m in ipairs(members) do set[m] = true end
+     groups[parent], groups_parent[parent] = set, parent_too == true
+ end
++-- hugge01: callers (vehicles.scan) can pick up child classes learned after a game update
++function util.group_members(parent)
++    return groups[parent]
++end
+ local function not_cdo(o)
+     local cdo = false
+     pcall(function() cdo = o:GetFullName():find("Default__", 1, true) ~= nil end)
+@@ -651,7 +655,18 @@ function util.instances(cls, hooks, group)
+         end
+         local grp = t.group and not groups_solo[t.group] and t.group
+         local g = grp and group_walk(grp)
+-        if g and g.unknown then
++        -- hugge01/v1.1.0 patch: absorb unknown children into the group instead of forever
++        -- falling back to one FindAllOf per class (join hitch; Humvee2 lesson). Attribution:
++        -- SYMPLYSCK/SurrounSync — keep single parent walk after game updates add vehicle/AI types.
++        if g and g.unknown and groups[grp] then
++            for c in pairs(g.buckets) do
++                if c ~= grp and not groups[grp][c] then
++                    groups[grp][c] = true
++                    log.info("instances: " .. grp .. " learned child " .. c .. " - kept one group walk")
++                end
++            end
++            g.unknown = nil
++        elseif g and g.unknown then
+             groups_solo[grp] = true
+             log.info("instances: " .. grp .. " has a child class outside its group (" .. g.unknown
+                 .. ") - its classes are walked one by one")
+diff --git a/mod/SurrounSync/Scripts/mirror/vehicles.lua b/mod/SurrounSync/Scripts/mirror/vehicles.lua
+index 7eac14c..d2e82c4 100644
+--- a/mod/SurrounSync/Scripts/mirror/vehicles.lua
++++ b/mod/SurrounSync/Scripts/mirror/vehicles.lua
+@@ -115,8 +115,11 @@ end
+ -- False until every car type has been walked once in this world (one type per frame).
+ local function scan()
+     local fresh, ready = {}, true
++    local seen = {}
+     for _, t in ipairs(TYPES) do
+-        local list, walked = util.instances("Vehicle_" .. t .. "_C", MASTER, CAR_GROUP)
++        local cls = "Vehicle_" .. t .. "_C"
++        seen[cls] = true
++        local list, walked = util.instances(cls, MASTER, CAR_GROUP)
+         if not walked then ready = false end
+         for _, v in ipairs(list) do
+             if alive(v) then
+@@ -125,6 +128,24 @@ local function scan()
+             end
+         end
+     end
++    -- hugge01/v1.1.0 patch: also list child classes util.instances absorbed into CAR_GROUP after a
++    -- game update (Humvee2-class miss: unsynced car + guest spawn duplicate). Attribution SYMPLYSCK.
++    local learned = util.group_members and util.group_members(CAR_GROUP)
++    if learned then
++        for cls in pairs(learned) do
++            if not seen[cls] and cls:match("^Vehicle_") then
++                seen[cls] = true
++                local list, walked = util.instances(cls, MASTER, CAR_GROUP)
++                if not walked then ready = false end
++                for _, v in ipairs(list) do
++                    if alive(v) then
++                        local n = name_of(v)
++                        if n then fresh[n] = v end
++                    end
++                end
++            end
++        end
++    end
+     if not ready then return false end
+     cars = fresh
+     scan_age = 0.0
+diff --git a/mod/SurrounSync/Scripts/mirror/world.lua b/mod/SurrounSync/Scripts/mirror/world.lua
+index 2c656fb..15fd923 100644
+--- a/mod/SurrounSync/Scripts/mirror/world.lua
++++ b/mod/SurrounSync/Scripts/mirror/world.lua
+@@ -107,7 +107,8 @@ local function differ(a, b)
+     return false
+ end
+ -- Live values move by themselves while weather blends: only a clear difference counts.
+-local JUMP, JUMP_CONFIRM = 1.0, 1.5   -- a live weather field moving more than this at once waits for the next look (~2 s)
++-- hugge01/v1.1.0: JUMP_CONFIRM 1.5 -> 2.5 soft lever for guest weather flicker when host stalls (Reddit desync)
++local JUMP, JUMP_CONFIRM = 1.0, 2.5   -- a live weather field moving more than this at once waits for the next look
+ local jump = nil                     -- { vals, since }: the host's live weather that jumped, not applied yet
+ local function jumped(a, b)
+     for i = 1, #FIELDS do if math.abs((a[i] or 0) - (b[i] or 0)) > JUMP then return true end end
